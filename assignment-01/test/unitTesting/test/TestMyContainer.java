@@ -7,9 +7,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.glowacki.utp.assignment01.Car;
-import eu.glowacki.utp.assignment01.MyContainer;
-import eu.glowacki.utp.assignment01.sample.Word;
+import assignment01.Car;
+import assignment01.MyContainer;
+import assignment01.sample.Word;
 
 public class TestMyContainer {
 	private MyContainer<Car, Integer> cars;
