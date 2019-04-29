@@ -72,11 +72,13 @@ public class Main {
 		 //---------Composition-----------
 		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = format.parse( "2019-07-30" ); 
-			promotion.organizeEvent("Global Fight Night 24",date);
+			promotion.organizeEvent("Global Fight Night 23",date);
 			promotion.getEventByDate(date).forEach(System.out::println);
-			System.out.println(promotion.getListOfEvents().size());
-			promotion.cancelEvent("Global Fight Night 24");
-			System.out.println(promotion.getListOfEvents().size());
+			promotion.organizeEvent("Global Fight Night 24",date);
+			promotion.organizeEvent("Global Fight Night 26",date);
+//			System.out.println(promotion.getListOfEvents().size());
+		promotion.cancelEvent("Global Fight Night 24");
+//			System.out.println(promotion.getListOfEvents().size());
 	}
 	
 }

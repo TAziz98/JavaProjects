@@ -66,8 +66,20 @@ public class Promotion implements Serializable {
     public void organizeEvent(String eventName, Date dateOfEvent) {
 		if(eventName==null || dateOfEvent==null)
 			throw new IllegalArgumentException("Invalid arguments");
-		else
+		else {
+	/*	if(listOfEvents
+				.stream()
+				.filter(event->event.getEventName().equals(eventName))
+				.filter(event->event.getDateOfEvent().equals(dateOfEvent))
+				.collect(Collectors.toList()).size()>0) { */
+			if(listOfEvents
+					.stream()
+					.anyMatch(event->event.getEventName().equals(eventName))){	
+     	    throw new RuntimeException("This event is already organized");
+		}else 
 		listOfEvents.add(new Event(eventName, dateOfEvent));
+		}
+
 	}
 
     //remove
@@ -75,12 +87,22 @@ public class Promotion implements Serializable {
 		if(eventName==null)
 			throw new IllegalArgumentException("Event is null");
 		else {
+		/*	if(listOfEvents
+					.stream()
+					.filter(event->event.getEventName().equals(eventName))
+					.collect(Collectors.toList()).size()>0) { */
+			if(listOfEvents
+					.stream()
+					.anyMatch(event->event.getEventName().equals(eventName))){
 			listOfEvents
 			.stream()
 			.filter(event->event.getEventName().equals(eventName))
 			.filter(event->event.getDateOfEvent().after(new Date()))
 			.findFirst()
             .map(event->listOfEvents.remove(event));
+			}
+			else
+				throw new RuntimeException("No such event was organized");	
 		}
 	}
 	
