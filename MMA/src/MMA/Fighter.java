@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,12 +17,105 @@ import java.util.stream.Collectors;
 //Ok
 public class Fighter implements Serializable {
 
-	private String nickName;
+	
 	private String officialName;
 //complex Attribute
 	private Statistics statistics;
-
 	private Contract contract;
+	
+
+	//-------------------->Binary Association
+	private Set<SponsorshipAssociation> sponsors = new HashSet<>();
+	 
+	public void acceptSponsorship(SponsorshipAssociation sponsor) {
+		if(sponsor == null)
+			throw new RuntimeException("Given parameter(sponsor) is null");
+		else {
+			if(sponsors.contains(sponsor))
+				throw new RuntimeException("Fighter is already sponsored by"+sponsor.getAssociationName());
+			else {
+				sponsors.add(sponsor);
+				if(!sponsor.getSponsoredFighters().contains(this)) 
+				    sponsor.sponsorAFighter(this);
+			}
+			
+		   
+	   
+		}
+	}
+	
+	public void refuseSponsorship(SponsorshipAssociation sponsor) {
+		if(sponsor == null)
+			throw new RuntimeException("Given parameter(sponsor) is null");
+		else {
+			if(!sponsors.contains(sponsor)) 
+				throw new RuntimeException("Fighter is not sponsored by"+sponsor.getAssociationName());
+			else
+				sponsors.remove(sponsor);
+			if(sponsor.getSponsoredFighters().contains(this))
+				sponsor.unsponsorAFighter(this);
+		}
+	}
+	
+	public Set<SponsorshipAssociation> getSponsors() {
+		return new HashSet<>(sponsors);
+	}
+
+  //------------------------>
+	
+	//------------------>Qualified Association 
+	private Team team;
+	
+	private String nickName;
+	
+	public void setTeam(Team team) {
+		if(team == null){
+			throw new RuntimeException("Given parameter(team) is null");
+		}else{		
+			if(team.getFighters().containsKey(this.nickName)) 
+				 this.team = team;   
+			else 
+				team.signFighter(this);
+						
+		}
+		
+	}
+	
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setNickName(String nickName) {
+		if (nickName == null)
+			throw new NullPointerException("NickName is not applied");
+		else
+			this.nickName = nickName;
+	}	
+
+	public String getNickName() {
+		return nickName;
+	}
+	
+	
+	
+	//------------------------->
+	
+	
+	////-------------------->|Association With An Attribute|
+	public void setContract(Contract contract) {
+		if (contract == null)
+			throw new NullPointerException("No such contract");
+		if (contract.getFighter() != this)
+			throw new IllegalArgumentException("Contract with different fighter");
+		else
+			this.contract = contract;
+	}
+	
+	public Contract getContract() {
+		return contract;
+	}
+	//------------------------>
+	
 //class extent
 	private static Map<String, Fighter> fighterExtent = new HashMap<String, Fighter>();
 
@@ -38,14 +132,6 @@ public class Fighter implements Serializable {
 		fighterExtent.put(this.nickName, this);
 	}
 
-	public void setContract(Contract contract) {
-		if (contract == null)
-			throw new NullPointerException("No such contract");
-		if (contract.getFighter() != this)
-			throw new IllegalArgumentException("Contract with different fighter");
-		else
-			this.contract = contract;
-	}
 
 //class Method
 	public static String ViewRecordByNickName(String nickName) {
@@ -98,12 +184,6 @@ public class Fighter implements Serializable {
 			this.statistics = statistics;
 	}
 
-	public void setNickName(String nickName) {
-		if (nickName == null)
-			throw new NullPointerException("NickName is not applied");
-		else
-			this.nickName = nickName;
-	}
 
 	public static void serialize() {
 		try {
@@ -142,6 +222,7 @@ public class Fighter implements Serializable {
 		fighterExtent.put(fighter.nickName, fighter);
 	}*/
 	
+
 	
 public static void  removeFighterExtent(Fighter fighter) {
 	if (fighter == null)
@@ -159,8 +240,5 @@ public static void  removeFighterExtent(Fighter fighter) {
 		return statistics;
 	}
 
-	public String getNickName() {
-		return nickName;
-	}
 
 }

@@ -1,14 +1,3 @@
-//findFirst 
-//isPresent
-//boxed
-//removeIf
-//
-//----stream-----
-//
-//
-//contains
-//
-//----list------
 
 package MMA;
 
@@ -25,53 +14,63 @@ import java.util.stream.Collectors;
 public class Promotion implements Serializable {
 
 	private String promotionName;
-	private List<Contract> listOfContracts = new ArrayList<>();
-    private Set<Event> listOfEvents = new HashSet<Promotion.Event>();
-
+	
 	public Promotion(String promotionName) {
 		this.setPromotionName(promotionName);
 	}
-
-	public void addContract(Contract contract) {
-		if (contract.getPromotion() != this)
-			throw new IllegalArgumentException("Contract with different promotion");
-		if (this.listOfContracts.contains(contract))
-			throw new IllegalArgumentException("Contract already signed");
-		else
-			listOfContracts.add(contract);
-	}
-
-	public void removeContract(Contract contract) {
-		if (contract.getPromotion() != this)
-			throw new IllegalArgumentException("Contract with different promotion");
-		if (!this.listOfContracts.contains(contract))
-			throw new IllegalArgumentException("Contract doesn't exist");
-		else
-			listOfContracts.remove(contract);
-	}
-
 	public void setPromotionName(String promotionName) {
 		if (promotionName == null)
 			throw new NullPointerException("Promotions name can't be null");
 		else
 			this.promotionName = promotionName;
 	}
-
-	public List<Contract> getListOfContracts() {
-		return new ArrayList<>(listOfContracts);
-	}
-
+	
 	public String getPromotionName() {
 		return promotionName;
 	}
 	
-	public void organizeEvent(String eventName, Date dateOfEvent) {
+	//-------------------->|Association With An Attribute|
+		private List<Contract> listOfContracts = new ArrayList<>();
+		
+		public void addContract(Contract contract) {
+			if (contract.getPromotion() != this)
+				throw new IllegalArgumentException("Contract with different promotion");
+			if (this.listOfContracts.contains(contract))
+				throw new IllegalArgumentException("Contract already signed");
+			else
+				listOfContracts.add(contract);
+		}
+		
+
+		public void removeContract(Contract contract) {
+			if (contract.getPromotion() != this)
+				throw new IllegalArgumentException("Contract with different promotion");
+			if (!this.listOfContracts.contains(contract))
+				throw new IllegalArgumentException("Contract doesn't exist");
+			else
+				listOfContracts.remove(contract);
+		}
+
+		
+		public List<Contract> getListOfContracts() {
+			return new ArrayList<>(listOfContracts);
+		}
+		//------------------> 
+		
+
+	
+	//-----------------> |Composition Association|
+    private Set<Event> listOfEvents = new HashSet<Promotion.Event>();
+
+    //add
+    public void organizeEvent(String eventName, Date dateOfEvent) {
 		if(eventName==null || dateOfEvent==null)
 			throw new IllegalArgumentException("Invalid arguments");
 		else
 		listOfEvents.add(new Event(eventName, dateOfEvent));
 	}
 
+    //remove
 	public void cancelEvent(String eventName) {
 		if(eventName==null)
 			throw new IllegalArgumentException("Event is null");
@@ -101,6 +100,7 @@ public class Promotion implements Serializable {
 	public Set<Event> getListOfEvents() {
 		return new HashSet<>(listOfEvents);
 	}
+	
 	
 	private class Event{
 		private String eventName;
@@ -134,10 +134,10 @@ public class Promotion implements Serializable {
 			this.dateOfEvent = dateOfEvent;
 		}
 		
-	
-		
 		
 	}
+	
+	//------------------>
 
 	
 

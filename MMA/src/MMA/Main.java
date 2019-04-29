@@ -23,7 +23,7 @@ public class Main {
 				new Statistics(18, 1, 5, Division.LIGHTWEIGHT, DivisionRating.TOP_5));
 		Khabib.getStatistics().setListOfOponents(Arrays.asList(Tony, Edson));
 		Promotion promotion = new Promotion("UFC");
-		Contract contract = new Contract(4, 500000, new Integer(2000), John, promotion);
+		 Contract contract = new Contract(4, 500000, new Integer(2000), John, promotion);
 		oponents.add(Tony);
 		System.out.println(Fighter.ViewRecordByNickName(Khabib.getNickName().toString()));
 		System.out.println(John.getAnnualSalary());
@@ -39,13 +39,44 @@ public class Main {
 		for (String f : Fighter.ViewTopFighters(Division.LIGHTWEIGHT)) {
 			System.out.println(f);
 		}
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = format.parse( "2018-04-30" ); 
-		promotion.organizeEvent("Global Fight Night 24",date);
-		promotion.getEventByDate(date).forEach(System.out::println);
-		promotion.cancelEvent("Global Fight Night 24");
-		promotion.getEventByDate(date).forEach(System.out::println);
+		
+		//----------Binary ----------- 
+		 SponsorshipAssociation Reebok = new SponsorshipAssociation("Reebok", Khabib);
+		 System.out.println(Reebok.getSponsoredFighters().contains(Khabib));
+		 System.out.println(Khabib.getSponsors().contains(Reebok));
+		 Reebok.sponsorAFighter(Tony);
+		 Reebok.unsponsorAFighter(Tony);
+		 System.out.println(Tony.getSponsors().contains(Reebok));
+		 Khabib.refuseSponsorship(Reebok);
+		 System.out.println(Reebok.getSponsoredFighters().contains(Khabib));
+		 System.out.println(Khabib.getSponsors().contains(Reebok));
+		 
+		 //---------With An Attribute--------
+		 System.out.println(promotion.getListOfContracts().get(0).getFighter().getOfficialName());
+		 System.out.println(John.getContract().getPromotion().getPromotionName());
+		 promotion.removeContract(contract);
+		 System.out.println(promotion.getListOfContracts().contains(contract));
+		 
+		 
+		//----------Qualified -----------
+		 Team aka = new Team("AKA");
+		 aka.signFighter(John);
+		 System.out.println(John.getTeam().getTeamsName());
+		 Tony.setTeam(aka);
+		 System.out.println(aka.getFighters().get(Tony.getNickName()).getTeam().getTeamsName());
+		 System.out.println(aka.getFighter("Tiramisu").getOfficialName());
+		 aka.unsignFighter(Tony);
+		 System.out.println(aka.getFighters().containsKey("Tiramisu"));
+	
+		 
+		 //---------Composition-----------
+		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = format.parse( "2019-07-30" ); 
+			promotion.organizeEvent("Global Fight Night 24",date);
+			promotion.getEventByDate(date).forEach(System.out::println);
+			System.out.println(promotion.getListOfEvents().size());
+			promotion.cancelEvent("Global Fight Night 24");
+			System.out.println(promotion.getListOfEvents().size());
 	}
 	
-
 }

@@ -111,6 +111,17 @@ public class Statistics implements Serializable {
 	public Division getDivision() {
 		return division;
 	}
+	public int getNumberOfWins() {
+		return numberOfWins;
+	}
+
+	public int getNumberofLosts() {
+		return numberofLosts;
+	}
+
+	public int getNumberOfStandOffs() {
+		return numberOfStandOffs;
+	}
 
 	public void setDivision(Division division) {
 		if (division == null)

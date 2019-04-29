@@ -2,7 +2,7 @@ package MMA;
 
 import java.io.Serializable;
 
-//Ok
+
 public class Contract implements Serializable {
 	//mandatory
 	private int numberOfFightsSettledByPromotion;
@@ -23,25 +23,8 @@ public class Contract implements Serializable {
 		setFighter(fighter);
 		setPromotion(promotion);
 	}
-
-	private void thresholdCheck(Fighter fighter) {
-		if (fighter.getStatistics().totalFights() >= thresholdForSigningContract)
-			return;
-		else
-			throw new RuntimeException("Threshold is not done");
-	}
-
-	//corrected
-	public static int getThresholdForSigningContract() {
-		return thresholdForSigningContract;
-	}
-
-	public static void setThresholdForSigningContract(int thresholdForSigningContract) {
-		if(thresholdForSigningContract<0) 
-			throw new RuntimeException("can't be negative");
-		Contract.thresholdForSigningContract = thresholdForSigningContract;
-	}
-
+	
+////-------------------->|Association With An Attribute|
 	private void setFighter(Fighter fighter) {
 		if (fighter == null)
 			throw new IllegalArgumentException("No fighter applied");
@@ -59,7 +42,15 @@ public class Contract implements Serializable {
 			this.promotion.addContract(this);
 		}
 	}
+	
+	public Fighter getFighter() {
+		return fighter;
+	}
 
+	public Promotion getPromotion() {
+		return promotion;
+	}
+	
 	public Integer getNumberOfFightsSettledByPromotion() {
 		return numberOfFightsSettledByPromotion;
 	}
@@ -82,12 +73,25 @@ public class Contract implements Serializable {
 			this.honorariumSettledByPromotion = honorariumSettledByPromotion;
 	}
 
-	public Fighter getFighter() {
-		return fighter;
+
+	//---------------->
+	
+	private void thresholdCheck(Fighter fighter) {
+		if (fighter.getStatistics().totalFights() >= thresholdForSigningContract)
+			return;
+		else
+			throw new RuntimeException("Threshold is not done");
 	}
 
-	public Promotion getPromotion() {
-		return promotion;
+	//corrected
+	public static int getThresholdForSigningContract() {
+		return thresholdForSigningContract;
+	}
+
+	public static void setThresholdForSigningContract(int thresholdForSigningContract) {
+		if(thresholdForSigningContract<0) 
+			throw new RuntimeException("can't be negative");
+		Contract.thresholdForSigningContract = thresholdForSigningContract;
 	}
 
 	public Integer getBonus() {
@@ -101,4 +105,5 @@ public class Contract implements Serializable {
 		this.performanceOfNight = bonus;
 	}
 	}
+	
 }
