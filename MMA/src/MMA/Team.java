@@ -34,10 +34,14 @@ public class Team {
 			throw new RuntimeException("Given parameter(fighter) is null");
 		}
 		else {
-			if(fighters.containsKey(fighter.getNickName())){
-				fighters.remove(fighter.getNickName());
-			}else {
+			if(!fighters.containsKey(fighter.getNickName())){
 				throw new RuntimeException("Fighter is not in Team");
+			}else {
+				System.out.println("works");
+				fighters.remove(fighter.getNickName());
+				if(fighter.getTeam()!=null) {
+				fighter.refuceTeam(this);	
+				}
 			}
 		}	
 	}

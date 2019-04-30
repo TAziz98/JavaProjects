@@ -43,6 +43,7 @@ public class Promotion implements Serializable {
 		
 
 		public void removeContract(Contract contract) {
+			System.out.println(contract.getPromotion().getPromotionName());
 			if (contract.getPromotion() != this)
 				throw new IllegalArgumentException("Contract with different promotion");
 			if (!this.listOfContracts.contains(contract))

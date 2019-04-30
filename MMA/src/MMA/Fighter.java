@@ -21,7 +21,7 @@ public class Fighter implements Serializable {
 	private String officialName;
 //complex Attribute
 	private Statistics statistics;
-	private Contract contract;
+
 	
 
 	//-------------------->Binary Association
@@ -81,6 +81,13 @@ public class Fighter implements Serializable {
 		
 	}
 	
+	public void refuceTeam(Team team) {
+		this.team = null;
+		if(team.getFighters().containsKey(this.nickName)) {
+			team.unsignFighter(this);	
+		}
+	}
+	
 	public Team getTeam() {
 		return team;
 	}
@@ -98,10 +105,13 @@ public class Fighter implements Serializable {
 	
 	
 	
+	
 	//------------------------->
 	
 	
-	////-------------------->|Association With An Attribute|
+	//-------------------->|Association With An Attribute|
+	private Contract contract;
+	
 	public void setContract(Contract contract) {
 		if (contract == null)
 			throw new NullPointerException("No such contract");
@@ -109,6 +119,16 @@ public class Fighter implements Serializable {
 			throw new IllegalArgumentException("Contract with different fighter");
 		else
 			this.contract = contract;
+	}
+
+	
+	public void refuceContract(Contract contract) {
+		if (contract == null)
+			throw new NullPointerException("null parameter applied");
+		if (contract.getFighter() != this)
+			throw new IllegalArgumentException("Contract with different fighter");
+		else
+			 this.contract=null;		
 	}
 	
 

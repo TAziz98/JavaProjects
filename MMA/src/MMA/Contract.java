@@ -43,6 +43,27 @@ public class Contract implements Serializable {
 		}
 	}
 	
+	public void excludeFighter(Fighter fighter) {
+		if (fighter == null)
+			throw new IllegalArgumentException("No fighter applied");
+		else {
+			fighter.refuceContract(this);
+			this.fighter = null;
+		}
+	}
+	
+	public void excludePromotion(Promotion promotion) {
+		if (promotion == null)
+			throw new IllegalArgumentException("No promotion applied");
+		else {
+			System.out.println("me");
+			
+			promotion.removeContract(this);
+			this.promotion = null;
+		}
+	}
+		
+		
 	public Fighter getFighter() {
 		return fighter;
 	}

@@ -52,23 +52,35 @@ public class Main {
 		 System.out.println(Khabib.getSponsors().contains(Reebok));
 		 
 		 //---------With An Attribute--------
+		 System.out.println("---------With An Attribute--------");
 		 System.out.println(promotion.getListOfContracts().get(0).getFighter().getOfficialName());
 		 System.out.println(John.getContract().getPromotion().getPromotionName());
-		 promotion.removeContract(contract);
-		 System.out.println(promotion.getListOfContracts().contains(contract));
-		 
+	//	 promotion.removeContract(contract);
+		 System.out.println(promotion.getListOfContracts().contains(contract)); 
+		 contract.excludePromotion(promotion);
+		 contract.excludeFighter(John);
+		 System.out.println(John.getContract()==null);
+		 System.out.println(promotion.getListOfContracts().size()>0);
+		 System.out.println(contract.getFighter()==null);
+		 System.out.println(contract.getPromotion()==null);
+      //   System.out.println(contract.getPromotion().getPromotionName());
+//		 System.out.println(promotion.getListOfContracts().get(0).getFighter().getOfficialName());
+//		
+//		 System.out.println(promotion.getListOfContracts().size()>0);
+		 System.out.println("-----------------------------");
 		 
 		//----------Qualified -----------
+		 System.out.println("-------------------------------");
 		 Team aka = new Team("AKA");
-		 aka.signFighter(John);
-		 System.out.println(John.getTeam().getTeamsName());
 		 Tony.setTeam(aka);
-		 System.out.println(aka.getFighters().get(Tony.getNickName()).getTeam().getTeamsName());
-		 System.out.println(aka.getFighter("Tiramisu").getOfficialName());
-		 aka.unsignFighter(Tony);
-		 System.out.println(aka.getFighters().containsKey("Tiramisu"));
 		 System.out.println(Tony.getTeam().getTeamsName());
-	
+		 System.out.println(aka.getFighters().containsKey("Tiramisu"));
+		 Tony.refuceTeam(aka);
+		 System.out.println(aka.getFighters().containsKey("Tiramisu"));
+		 Tony.setTeam(aka);
+	     System.out.println(Tony.getTeam().getTeamsName());
+	     aka.unsignFighter(Tony);
+	 //    System.out.println(Tony.getTeam().getTeamsName());
 		 
 		 //---------Composition-----------
 		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -78,7 +90,7 @@ public class Main {
 			promotion.organizeEvent("Global Fight Night 24",date);
 			promotion.organizeEvent("Global Fight Night 26",date);
 //			System.out.println(promotion.getListOfEvents().size());
-		promotion.cancelEvent("Global Fight Night 24");
+		    promotion.cancelEvent("Global Fight Night 24");
 //			System.out.println(promotion.getListOfEvents().size());
 	}
 	
