@@ -67,6 +67,7 @@ public class Main {
 		 System.out.println(aka.getFighter("Tiramisu").getOfficialName());
 		 aka.unsignFighter(Tony);
 		 System.out.println(aka.getFighters().containsKey("Tiramisu"));
+		 System.out.println(Tony.getTeam().getTeamsName());
 	
 		 
 		 //---------Composition-----------
