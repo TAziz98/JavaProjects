@@ -111,6 +111,8 @@ public class Fighter implements Serializable {
 			this.contract = contract;
 	}
 	
+
+	
 	public Contract getContract() {
 		return contract;
 	}

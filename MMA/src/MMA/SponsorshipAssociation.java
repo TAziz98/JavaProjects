@@ -37,7 +37,6 @@ public class SponsorshipAssociation {
 				 throw new RuntimeException("Fighter is not sponsored by "+this.associationName); 	
 			else
 		   sponsoredFighters.remove(fighter);
-			fighter=null;
 			if(fighter.getSponsors().contains(this)) 
 			fighter.refuseSponsorship(this);
 		 

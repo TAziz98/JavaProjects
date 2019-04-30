@@ -36,7 +36,6 @@ public class Team {
 		else {
 			if(fighters.containsKey(fighter.getNickName())){
 				fighters.remove(fighter.getNickName());
-				fighter=null;
 			}else {
 				throw new RuntimeException("Fighter is not in Team");
 			}
