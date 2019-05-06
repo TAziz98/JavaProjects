@@ -1,12 +1,40 @@
 package MMA;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 //----------------->Qualified Association 
 public class Team {
   
 	private String teamsName;
+    private Compartment compartment;
+    private Workout workout;
+    
 
+	public Compartment getCompartment() {
+		return compartment;
+	}
+
+	public void setCompartment(Compartment compartment) {
+		if(compartment==null)
+			 throw new RuntimeException("Given parameter(compartment) is null");
+		else {
+		this.compartment = compartment;
+		}
+	}
+	
+	
+	public Workout getWorkout() {
+		return workout;
+	}
+
+	public void doWorkout(Workout workout) {
+		if(workout==null)
+			 throw new RuntimeException("Given parameter(workout) is null");
+		else
+		this.workout = workout;
+	}
+	
 	private Map<String,Fighter>  fighters = new HashMap<String,Fighter>();
 	
     public Team(String teamName) {
@@ -37,7 +65,6 @@ public class Team {
 			if(!fighters.containsKey(fighter.getNickName())){
 				throw new RuntimeException("Fighter is not in Team");
 			}else {
-				System.out.println("works");
 				fighters.remove(fighter.getNickName());
 				if(fighter.getTeam()!=null) {
 				fighter.refuceTeam(this);	

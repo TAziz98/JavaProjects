@@ -12,23 +12,23 @@ public class Main {
 	public static void main(String[] args) throws ParseException {
 		// TODO Auto-generated method stub
 		List<Fighter> oponents = new ArrayList<>();
-
-		Fighter Tony = new Fighter("Tiramisu", "Tony Fergusson",
-				new Statistics(22, 0, 3, Division.LIGHTWEIGHT, DivisionRating.TOP_1));
-		Fighter Khabib = new Fighter("Eagle", "Khabib Nurmagomedov",
-				new Statistics(27, 0, 0, Division.LIGHTWEIGHT, DivisionRating.Champion));
-		Fighter John = new Fighter("Bones", "John Jones",
-				new Statistics(24, 1, 0, Division.LIGHTHEAVYWEIGHT, DivisionRating.Champion));
-		Fighter Edson = new Fighter("Eddy", "Edson Barbozaa",
-				new Statistics(18, 1, 5, Division.LIGHTWEIGHT, DivisionRating.TOP_5));
+		Fighter Tony = new Fighter("Tiramisu", "Tony"," Fergusson",20,27,
+				new Statistics(22, 0, 3, Division.LIGHTWEIGHT, DivisionRating.TOP_1),new AfroAmerican("Afro-American", true));
+		Fighter Khabib = new Fighter("Eagle", "Khabib","Nurmagomedov",24,36,
+				new Statistics(27, 0, 0, Division.LIGHTWEIGHT, DivisionRating.Champion), new Caucasian("Caucasian", true));
+		Fighter John = new Fighter("Bones", "John","Jones",19,33,
+				new Statistics(24, 1, 0, Division.LIGHTHEAVYWEIGHT, DivisionRating.Champion), new Caucasian("Caucasian", true));
+		Fighter Edson = new Fighter("Eddy", "Edson","Barbozaa",14,19,
+				new Statistics(18, 1, 5, Division.LIGHTWEIGHT, DivisionRating.TOP_5), new AfroAmerican("Afro-American", false));
 		Khabib.getStatistics().setListOfOponents(Arrays.asList(Tony, Edson));
 		Promotion promotion = new Promotion("UFC");
 		 Contract contract = new Contract(4, 500000, new Integer(2000), John, promotion);
-		oponents.add(Tony);
+		oponents.add(Khabib);
+		
 		System.out.println(Fighter.ViewRecordByNickName(Khabib.getNickName().toString()));
 		System.out.println(John.getAnnualSalary());
 		for (Fighter listOfOponents : Khabib.getStatistics().getListOfOponents())
-			System.out.print("| " + listOfOponents.getOfficialName() + " |");
+			System.out.print("| " + listOfOponents.getNickName() + " |");
 		System.out.println();
 		System.out.println(Khabib.getStatistics().getDivision());
 		System.out.println("------");
@@ -53,7 +53,7 @@ public class Main {
 		 
 		 //---------With An Attribute--------
 		 System.out.println("---------With An Attribute--------");
-		 System.out.println(promotion.getListOfContracts().get(0).getFighter().getOfficialName());
+		 System.out.println(promotion.getListOfContracts().get(0).getFighter().getName());
 		 System.out.println(John.getContract().getPromotion().getPromotionName());
 	//	 promotion.removeContract(contract);
 		 System.out.println(promotion.getListOfContracts().contains(contract)); 
@@ -92,6 +92,54 @@ public class Main {
 //			System.out.println(promotion.getListOfEvents().size());
 		    promotion.cancelEvent("Global Fight Night 24");
 //			System.out.println(promotion.getListOfEvents().size());
-	}
+		    
+		    
+		 //--------------abstract-------------------------
+			Person zabit = new Fighter("ZaBeast", "Zabit","Magomedsharipov",10, 22, new Statistics(17, 0, 1, Division.LIGHTWEIGHT, DivisionRating.TOP_10), new Caucasian("Caucasian", false));
+			 Contract contractZabit = new Contract(4, 500000, new Integer(2000), (Fighter) zabit, promotion);
+			System.out.println(zabit.getLastName());
+           System.out.println(zabit.getSalary());
+            
+        	//-------------------overlapping-------------------
+            Compartment compartment = new Compartment("Californian AKA CLUB",CompartmentType.TrainingArena,40); 
+         //   compartment.setTax(5000);
+        	aka.setCompartment(compartment);
+        	System.out.println(aka.getCompartment().getRentPrice());
+        	aka.getCompartment().addCompartment(CompartmentType.BattleArena, 20);
+        	System.out.println(aka.getCompartment().getCompartments().size());
+       
+
+        	System.out.println("--------------------");
+        	//aka.getCompartment().addCompartment(CompartmentType.BattleArena,7);
+//        	aka.getCompartment().addCompartment(CompartmentType.BattleArena, 3);
+        //	System.out.println(aka.getCompartment().getHoldDownPrice());
+        	compartment.removeComparment(CompartmentType.TrainingArena);
+        	System.out.println(compartment.isAvailable());
+        	System.out.println(aka.getCompartment().getCompartments().size());
+        	aka.getCompartment().addCompartment(CompartmentType.TrainingArena, 20);
+        	System.out.println(aka.getCompartment().getCompartments().size());
+        	System.out.println(aka.getCompartment().getRentPrice());
+        	System.out.println(aka.getCompartment()==null);
+        	
+     
+        	CoachInCareer coachInCar = new CoachInCareer("ZaBeast", "Zabit","Magomedsharipov",10, 18,new Statistics(17, 0, 1, Division.LIGHTWEIGHT, DivisionRating.TOP_10),new Integer(4000),7,new AfroAmerican("Afro-American", true));
+        	Contract contract2 = new Contract(4, 500000, new Integer(2000), coachInCar, promotion);
+        	coachInCar.getStatistics().setListOfOponents(oponents);
+        	System.out.println(coachInCar.getTotalSalary());
+        	System.out.println(coachInCar.identifyCoachsRank());
+        	System.out.println(((AfroAmerican) coachInCar.getEthnicity()).isMedical_inspectionHealthy());
+            System.out.println(((Caucasian)zabit.getEthnicity()).isDoping_testClear());
 	
+            
+       //----------- A dynamic-inheritance------------
+    aka.signFighter(Khabib);
+	Workout workout = new  Workout("Crossfit Super Sets", WorkoutTypes.CrossFit, "Bench Press");
+    aka.doWorkout(workout);
+    aka.getWorkout().addActivity("Delta Pumping");
+    System.out.println(aka.getWorkout().identifyHeartRate(aka.getFighter("Eagle")));
+    
+	
+		
+	}
+
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,14 +16,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 //Ok
-public class Fighter implements Serializable {
+public class Fighter extends Person implements Serializable {
 
-	
-	private String officialName;
+
 //complex Attribute
 	private Statistics statistics;
 
-	
+	//class extent initialization
+		public Fighter(String nickName, String officialname, String lastName,int experienceCareer, int age, Statistics statistics, Ethnicity ethnicity) {
+			super(officialname, lastName, experienceCareer, age, ethnicity);
+			this.setStatistics(statistics);
+			this.setNickName(nickName);
+			fighterExtent.put(this.nickName, this);
+		}
 
 	//-------------------->Binary Association
 	private Set<SponsorshipAssociation> sponsors = new HashSet<>();
@@ -146,15 +152,6 @@ public class Fighter implements Serializable {
 		return new HashMap<>(fighterExtent);
 	}
 
-//class extent initialization
-	public Fighter(String nickName, String officialname, Statistics statistics) {
-		this.setStatistics(statistics);
-		this.setOfficialName(officialname);
-		this.setNickName(nickName);
-		fighterExtent.put(this.nickName, this);
-	}
-
-
 //class Method
 	public static String ViewRecordByNickName(String nickName) {
 		if (nickName == null)
@@ -173,18 +170,13 @@ public class Fighter implements Serializable {
 		return contract.getHonorariumSettledByPromotion() * contract.getNumberOfFightsSettledByPromotion() + bonus;
 	}
 
-	public void setOfficialName(String officialName) {
-		if (officialName == null)
-			throw new NullPointerException("Official Name is not applied");
-		else
-			this.officialName = officialName;
-	}
+
 
 	//method overloading
 	public static List<String> ViewTopFighters() {
 		return fighterExtent.values().stream()
 				.filter(fighter -> fighter.getStatistics().getDivisionRating().equals(DivisionRating.Champion))
-				.map(fighter -> fighter.officialName).collect(Collectors.toList());
+				.map(fighter -> fighter.getNickName()).collect(Collectors.toList());
 	}
 
 	public static List<String> ViewTopFighters(Division division) {
@@ -193,7 +185,7 @@ public class Fighter implements Serializable {
 		for (DivisionRating divisionRating : rating) {
 			fighterExtent.values().stream().filter(fighter -> fighter.getStatistics().getDivision().equals(division))
 					.filter(fighter -> fighter.getStatistics().getDivisionRating().equals(divisionRating))
-					.map(fighter -> fighter.officialName).forEach(fighter -> fighters.add(fighter));
+					.map(fighter -> fighter.getNickName()).forEach(fighter -> fighters.add(fighter));
 		}
 		return fighters;
 
@@ -254,12 +246,16 @@ public static void  removeFighterExtent(Fighter fighter) {
 	else
 	fighterExtent.put(fighter.nickName, fighter);
 }
-	public String getOfficialName() {
-		return officialName;
-	}
+
 
 	public Statistics getStatistics() {
 		return statistics;
+	}
+
+	@Override
+	public Integer getSalary() {
+		// TODO Auto-generated method stub
+		return getAnnualSalary();
 	}
 
 
