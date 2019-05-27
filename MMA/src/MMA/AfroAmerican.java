@@ -1,11 +1,14 @@
 package MMA;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="AFRO_AMERICAN")
 public class AfroAmerican extends Ethnicity {
+	
+	@Column(name="medical_inspection", nullable = false)
 	private boolean medical_inspection;
 	
 	public AfroAmerican(String ethnicityName,boolean isHealthy) {

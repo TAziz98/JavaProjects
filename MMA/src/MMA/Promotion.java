@@ -15,6 +15,8 @@ import java.util.Vector;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,6 +33,7 @@ public class Promotion implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int promotion_id;
 	
+	@Column(name="promotion_name",length=30)
 	private String promotionName;
 	
 	public Promotion(String promotionName) {
@@ -98,8 +101,8 @@ public class Promotion implements Serializable{
 //			duplicatesVector.remove(myContract);
 		}
 		
-		public Vector<Contract> getDuplicatesVector() {
-			return new Vector<>(duplicatesVector);
+		public List<Contract> getDuplicatesVector() {
+			return new ArrayList<>(duplicatesVector);
 		}
 		
 		
@@ -111,7 +114,7 @@ public class Promotion implements Serializable{
 
 	
 	//-----------------> |Composition Association|
-		@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
     private Set<Event> listOfEvents = new HashSet<Promotion.Event>();
 
     
@@ -189,7 +192,9 @@ public class Promotion implements Serializable{
 			
 		}
 		
-		
+		private Event() {
+			
+		}
 
 		public String getEventName() {
 			return eventName;

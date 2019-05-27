@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,18 +29,26 @@ public abstract class Person implements Comparable<Person> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int person_id;
 	
-	
+	@Column(name="name", length=30)
 	private String name;
+	
+	@Column(name="last_name", length=30)
 	private String lastName;
+	
+	@Column(name="age", nullable = false)
 	private int age;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="ethnicity_id")
 	private Ethnicity ethnicity;
 	
-	
+	@Column(name="experience_career", nullable = true)
 	private Integer experienceCareer;
+	
+	@Column(name="min_age", nullable = false)
 	public final static int minAge = 18;
+	
+	@Column(name="max_age", nullable = false)
 	public final static int maxAge = 47;
 	
 	private static TreeSet<Person> personExtent = new TreeSet<>(Comparator.reverseOrder());

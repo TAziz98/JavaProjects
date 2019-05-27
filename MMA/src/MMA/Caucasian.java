@@ -1,11 +1,17 @@
 package MMA;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="CAUCASIAN")
 public class Caucasian extends Ethnicity {
+	
+	@Column(name="doping_test", nullable = false)
 	private boolean doping_test; 
 
 	public Caucasian(String ethnicityName, boolean isClear) {

@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,6 +35,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import util.HibernateUtil;
 
@@ -42,11 +45,8 @@ import util.HibernateUtil;
 @Table(name="FIGHTER")
 public class Fighter extends Person implements Serializable {
 
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	private int fighter_id;
 	
-	
+//private static EntityManager entityManager;
 	
 //complex Attribute
 	@OneToOne(cascade = CascadeType.ALL)
@@ -58,12 +58,13 @@ public class Fighter extends Person implements Serializable {
 			super(officialname, lastName, experienceCareer, age, ethnicity);
 			this.setStatistics(statistics);
 			this.setNickName(nickName);
-			fighterExtent.put(this.nickName, this);
+		//	fighterExtent.put(this.nickName, this);
+			this.addFighterExtent(this);
 		}
 		
 		public Fighter() {
 			super();
-			this.nickName="default";
+			this.nickName="fighter";
 		}
 
 	//-------------------->Binary Association
@@ -71,6 +72,7 @@ public class Fighter extends Person implements Serializable {
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinTable(name="FIGHTER_SPONSOR", joinColumns = @JoinColumn(name="fighter_id"), inverseJoinColumns = @JoinColumn(name="sponsorshipAssociation_id"))
 	private Set<SponsorshipAssociation> sponsors = new HashSet<>();
+	
 	
 	public void acceptSponsorship(SponsorshipAssociation sponsor) {
 		if(sponsor == null)
@@ -88,6 +90,8 @@ public class Fighter extends Person implements Serializable {
 	   
 		}
 	}
+	
+	
 	
 	public void refuseSponsorship(SponsorshipAssociation sponsor) {
 		if(sponsor == null)
@@ -304,7 +308,8 @@ public class Fighter extends Person implements Serializable {
 			return fighterExtent.get(nickName).getStatistics().toString(); // method overriding
 	}
 
-//derived attribute
+
+	//derived attribute
 	public Integer getAnnualSalary() {
 		 Contract currentContract = null;
 		 Integer bonus = null;
@@ -318,15 +323,10 @@ public class Fighter extends Person implements Serializable {
 			bonus = 0;
 		  }
 		   finally {
-	//	   session.close();
+		   session.close();
 			
 		}
 		return currentContract.getHonorariumSettledByPromotion()*currentContract.getNumberOfFightsSettledByPromotion()+ bonus;
-	
-//		Integer bonus = contract.getBonus();
-//		if (bonus == null)
-//			bonus = 0;
-//		return contract.getHonorariumSettledByPromotion() * contract.getNumberOfFightsSettledByPromotion() + bonus;
 	}
 
 
@@ -388,23 +388,76 @@ public class Fighter extends Person implements Serializable {
 		}
 	}
 
-/*	public static void  addFighterExtent(Fighter fighter) {
+	public static void  addFighterExtent(Fighter fighter) {
 		if (fighter == null)
-			throw new NullPointerException("null");
-		else
-		fighterExtent.put(fighter.nickName, fighter);
-	}*/
+		throw new NullPointerException("null");
+		else {
+			 Session session = HibernateUtil.getSessionFactory().openSession();
+	        try {
+	            session.beginTransaction();
+	            if(session.get(Fighter.class, fighter.getId())!=null) {	
+	            	throw new RuntimeException("contains already");	
+	            }
+	           else {
+	        	   System.out.println("doesn't contain");
+	            session.persist(fighter);
+	            session.getTransaction().commit();
+	           }
+	        } catch (Exception e) {
+	         e.printStackTrace();
+	        	
+	        }
+	        finally {
+	        	session.close();
+	        }
+		}
+		
+	}
 	
+	//public static void  addFighterExtent(Fighter fighter) {
+	//if (fighter == null)
+//		throw new NullPointerException("null");
+//		if (fighterExtent.containsKey(fighter.nickName))
+//			throw new IllegalArgumentException("contains already");
+	//else
+	//fighterExtent.put(fighter.nickName, fighter);
+	//}
 
 	
 public static void  removeFighterExtent(Fighter fighter) {
 	if (fighter == null)
 		throw new NullPointerException("null");
-	if (!fighterExtent.containsKey(fighter.nickName))
-		throw new IllegalArgumentException("doesnt contain");
-	else
-	fighterExtent.put(fighter.nickName, fighter);
+		else {
+			 Session session = HibernateUtil.getSessionFactory().openSession();
+			 try {
+		            session.beginTransaction();
+		            Fighter retrievedFighter = (Fighter) session.get(Fighter.class, fighter.getId());
+		            if(retrievedFighter==null) 	
+		            	throw new RuntimeException("does not contain");	
+		           else {
+		        	  session.delete(retrievedFighter);
+		        	  session.getTransaction().commit();
+		           }
+			 }catch (Exception e) {
+		        	e.printStackTrace();
+		         }
+		 
+        finally {
+        	session.close();
+        }
+		}
 }
+
+
+//
+//public static void  removeFighterExtent(Fighter fighter) {
+//	if (fighter == null)
+//		throw new NullPointerException("null");
+//	if (!fighterExtent.containsKey(fighter.nickName))
+//		throw new IllegalArgumentException("doesnt contain");
+//	else
+//	fighterExtent.put(fighter.nickName, fighter);
+//}
 
 
 	public Statistics getStatistics() {
@@ -422,6 +475,68 @@ public static void  removeFighterExtent(Fighter fighter) {
 	public int compareTo(Person o) {
 		// TODO Auto-generated method stub
 		return this.getAge()-o.getAge();
+	}
+	
+
+@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((association == null) ? 0 : association.hashCode());
+		result = prime * result + ((contract == null) ? 0 : contract.hashCode());
+		result = prime * result + ((nickName == null) ? 0 : nickName.hashCode());
+		result = prime * result + ((specialMakeSponsors == null) ? 0 : specialMakeSponsors.hashCode());
+		result = prime * result + ((sponsors == null) ? 0 : sponsors.hashCode());
+		result = prime * result + ((statistics == null) ? 0 : statistics.hashCode());
+		result = prime * result + ((team == null) ? 0 : team.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Fighter other = (Fighter) obj;
+		if (association == null) {
+			if (other.association != null)
+				return false;
+		} else if (!association.equals(other.association))
+			return false;
+		if (contract == null) {
+			if (other.contract != null)
+				return false;
+		} else if (!contract.equals(other.contract))
+			return false;
+		if (nickName == null) {
+			if (other.nickName != null)
+				return false;
+		} else if (!nickName.equals(other.nickName))
+			return false;
+		if (specialMakeSponsors == null) {
+			if (other.specialMakeSponsors != null)
+				return false;
+		} else if (!specialMakeSponsors.equals(other.specialMakeSponsors))
+			return false;
+		if (sponsors == null) {
+			if (other.sponsors != null)
+				return false;
+		} else if (!sponsors.equals(other.sponsors))
+			return false;
+		if (statistics == null) {
+			if (other.statistics != null)
+				return false;
+		} else if (!statistics.equals(other.statistics))
+			return false;
+		if (team == null) {
+			if (other.team != null)
+				return false;
+		} else if (!team.equals(other.team))
+			return false;
+		return true;
 	}
 
 	

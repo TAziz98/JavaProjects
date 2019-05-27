@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="CONTRACT")
@@ -42,7 +43,7 @@ public class Contract implements Serializable,Comparable<Contract> {
 	@JoinColumn(name="promotion_id")
 	private Promotion promotion;
 	
-	// class attribute - don't know yet hibernate
+	@Transient
 	private static int thresholdForSigningContract = 15;
 
 	public Contract(int numberOfFightsSettledByPromotion, int honorariumSettledByPromotion, Integer bonus,

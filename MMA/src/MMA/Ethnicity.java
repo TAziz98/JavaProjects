@@ -10,12 +10,12 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="Ethnicity")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Ethnicity {
 	
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int ethnicity_id;
 	
 	public int getEthnicity_id() {

@@ -56,7 +56,9 @@ public class Statistics implements Serializable {
 
 //	@OneToMany(cascade = CascadeType.ALL)
 //	@JoinTable(name="STATISTICS_LIST_OF_OPONENTS", joinColumns = @JoinColumn(name="statistics_id"), inverseJoinColumns = @JoinColumn(name="fighter_id"))
-	@ElementCollection
+	 @ElementCollection(targetClass=Fighter.class)
+	 @JoinTable(name="LIST_OF_OPONENTS",joinColumns=@JoinColumn(name="statistics_id"))
+     @Column(name="fighter_id")
 	private List<Fighter> listOfOponents;
 
 	public Statistics(int numberOfWins, int numberOfStandOffs, int numberofLosts, Division division,DivisionRating divisionRating) {

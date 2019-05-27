@@ -14,6 +14,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.Session;
+
+import util.HibernateUtil;
+
 @Entity
 @Table(name="SPONSORSHIPASSOCIATION")
 public class SponsorshipAssociation {
@@ -40,23 +44,24 @@ public class SponsorshipAssociation {
 	@ManyToMany(cascade = CascadeType.ALL,mappedBy = "sponsors", fetch = FetchType.LAZY)
 	private List<Fighter> sponsoredFighters = new ArrayList<>();
 	
+
 	//add
-	public void sponsorAFighter(Fighter fighter) {
-		 if(fighter==null) 
-				throw new RuntimeException("Given paramaeter(fighter) is null");
-		 else {
-			 if(fighter.getEthnicity().getEthnicityName().equals("Caucasian"))
-					throw new RuntimeException("We cant sposor caucasian ethnicity");
+		public void sponsorAFighter(Fighter fighter) {
+			 if(fighter==null) 
+					throw new RuntimeException("Given paramaeter(fighter) is null");
 			 else {
-			 if(sponsoredFighters.contains(fighter)) 
-				 throw new RuntimeException("Fighter is already sponsored by "+this.associationName); 
-			 else
-			 sponsoredFighters.add(fighter);
-			 if(!fighter.getSponsors().contains(this)) 
-			 fighter.acceptSponsorship(this);
-		 }
-		 }
-	}
+				 if(fighter.getEthnicity().getEthnicityName().equals("Caucasian"))
+						throw new RuntimeException("We cant sposor caucasian ethnicity");
+				 else {
+				 if(sponsoredFighters.contains(fighter)) 
+					 throw new RuntimeException("Fighter is already sponsored by "+this.associationName); 
+				 else
+				 sponsoredFighters.add(fighter);
+				 if(!fighter.getSponsors().contains(this)) 
+				 fighter.acceptSponsorship(this);
+			 }
+			 }
+		}
 	
 	//remove
 	public void unsponsorAFighter(Fighter fighter) {

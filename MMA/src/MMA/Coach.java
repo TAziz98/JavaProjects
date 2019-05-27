@@ -2,6 +2,7 @@ package MMA;
 
 import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,19 +14,22 @@ import javax.persistence.Table;
 @Table(name="COACH")
 public class Coach extends Person implements ICoach {
 	
+	@Column(name="salary_as_coach", nullable = true)
 	private Integer salaryAsCoach;
+	
+	@Column(name="experience_as_coach", nullable = false)
 	private int experienceAsCoach;
 	
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	private int coach_id;
-//	
 	
-	public Coach(String name, String lastName, Integer coachExperience, int age, Ethnicity ethnicity) {
+	public Coach(String name, String lastName, Integer coachExperience, int age, Ethnicity ethnicity,Integer salaryAsCoach, Integer experienceAsCoach ) {
 		// TODO Auto-generated constructor stub
 		super(name, lastName, coachExperience, age, ethnicity);
 		this.setSalaryAsCoach(salaryAsCoach);
 		this.setExperienceAsCoach(experienceAsCoach);
+	}
+	
+	public Coach() {
+		
 	}
 
 

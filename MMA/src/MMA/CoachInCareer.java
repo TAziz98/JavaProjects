@@ -2,6 +2,7 @@ package MMA;
 
 import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,12 +13,11 @@ import javax.persistence.Table;
 @Table(name="COACH_IN_CAREER")
 public class CoachInCareer extends Fighter implements ICoach {
 
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	private int coachInCareer_id;
-//	
-	
+
+	@Column(name="salary_as_coach", nullable = true)	
 	private Integer salaryAsCoach;
+	
+	@Column(name="experien_as_coach", nullable = false)
 	private int experienceAsCoach;
 	
 	public CoachInCareer(String nickName, String officialname, String lastName, int experienceCareer,int age,
@@ -28,6 +28,9 @@ public class CoachInCareer extends Fighter implements ICoach {
 		// TODO Auto-generated constructor stub
 	}
 
+	 public CoachInCareer() {
+		// TODO Auto-generated constructor stub
+	}
 
 
 	@Override

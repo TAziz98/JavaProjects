@@ -13,9 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 //----------------->Qualified Association 
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name="TEAM")
@@ -65,6 +66,7 @@ public class Team {
 	
 	
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "team",fetch = FetchType.EAGER)	
+	@MapKey
 	private Map<String,Fighter>  fighters = new HashMap<String,Fighter>();
 	
     public Team(String teamName) {

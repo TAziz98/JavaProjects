@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,6 +23,17 @@ public class Association {
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private int association_id;
+		
+		@Column(name="association_name")
+		private String associationName;
+		
+		public Association(String name) {
+			this.associationName=name;
+		}
+		
+		public Association() {
+			// TODO Auto-generated constructor stub
+		}
 		
 		
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "association",fetch = FetchType.EAGER)	
@@ -59,5 +71,31 @@ public class Association {
 				}
 			}
 		}	
+		
 	}
+	
+	public int getAssociation_id() {
+		return association_id;
+	}
+
+	public void setAssociation_id(int association_id) {
+		if(association_id<0)
+			throw new IllegalArgumentException("can't be negative");
+		else
+		this.association_id = association_id;
+	}
+
+	public String getAssociationName() {
+		return associationName;
+	}
+
+	public void setAssociationName(String associationName) {
+		if(this.associationName==null) 
+				throw new RuntimeException("Given parameter(team) is null");
+			else 
+			this.associationName=associationName;	
+				
+	}
+	
+	
 }

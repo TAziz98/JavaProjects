@@ -7,12 +7,20 @@ package MMA;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.boot.registry.classloading.spi.ClassLoaderService.Work;
 @Entity
 @Table(name="WORKOUT")
 public class Workout implements FullContact,Grappling,CrossFit {
@@ -22,6 +30,7 @@ public class Workout implements FullContact,Grappling,CrossFit {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int workout_id;
 		
+	@Column(name="name_of_workout", length=30)
 	private String nameOfWorkout;
 	
 	@ElementCollection
@@ -33,6 +42,8 @@ public class Workout implements FullContact,Grappling,CrossFit {
 	@ElementCollection
     private List<String> listOfActivities;
     
+	@Column(name="type_of_workout")
+	@Enumerated(EnumType.STRING)
     private WorkoutTypes workoutType;
 
     
@@ -58,6 +69,9 @@ public class Workout implements FullContact,Grappling,CrossFit {
   	
 	}
     
+    public Workout() {
+    	
+    }
     
     public void organizeCrossFit() {
     	this.workoutType=WorkoutTypes.CrossFit;

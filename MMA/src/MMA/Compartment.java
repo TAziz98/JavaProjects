@@ -4,32 +4,43 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 
 //FIXED
 @Entity
-@Table(name="COMPARTMENT_TABLE")
+@Table(name="COMPARTMENT")
 public class Compartment implements TrainingArena,BattleArena {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int compartment_id;
 	
+	@Column(name="name", length=30)
 	 private String Name;
+	 
+	 @Column(name="rent_price", nullable = true)
 	 private Integer rentPrice;
+	 
+	 @Column(name="holding_down_price", nullable = true)
 	 private Integer holdingDownPrice;
+	 
+	 @Column(name="price_per_day_for_training", nullable = false)
 	 private final int pricePerDayForTraining = 120;
+	 
+	 @Column(name="price_per_day_for_event", nullable = false)
 	 private final int pricePerDayForEvent = 800;
 	 
-	 @ElementCollection
+	 @ElementCollection(targetClass=CompartmentType.class)
+	 @JoinTable(name="compartments_list",joinColumns=@JoinColumn(name="compartment_id"))
+     @Column(name="compartments")
+	 @Enumerated(EnumType.STRING)
 	 private Set<CompartmentType> compartments;
 	 // EnumSet.noneOf(CompartmentType.class);
 	  
-	
+	public Compartment() {
+		
+	}
+	 
 	public Set<CompartmentType> getCompartments() {
 		return new HashSet<>(compartments);
 	}
