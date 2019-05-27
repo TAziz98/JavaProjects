@@ -1,6 +1,6 @@
 package MMA;
 
 public interface TrainingArena{
- 	public void setRentPrice(int periodOfRenting);
-	public int getRentPrice();
+ 	public void setRentPrice(Integer periodOfRenting);
+	public Integer getRentPrice();
 }

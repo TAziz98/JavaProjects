@@ -1,18 +1,49 @@
 package MMA;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
-public abstract class Person {
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@Entity
+@Table(name="Person")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Person implements Comparable<Person> {
+    
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int person_id;
+	
+	
 	private String name;
 	private String lastName;
 	private int age;
-	private Ethnicity ethnicity;
-	private Integer experienceCareer;
 	
-	private static Set<Person> personExtent = new HashSet<>();
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="ethnicity_id")
+	private Ethnicity ethnicity;
+	
+	
+	private Integer experienceCareer;
+	public final static int minAge = 18;
+	public final static int maxAge = 47;
+	
+	private static TreeSet<Person> personExtent = new TreeSet<>(Comparator.reverseOrder());
+
 	
 	public Person(String name, String lastName, Integer experienceCareer, int age, Ethnicity ethnicity) {
 		this.setName(name);
@@ -23,6 +54,14 @@ public abstract class Person {
 		this.personExtent.add(this);
 	}
 	
+
+	
+	public Person() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	public abstract Integer getSalary();
 	
 	
@@ -42,10 +81,13 @@ public abstract class Person {
 		return name;
 	}
 
+	//Custom constraint
 	public void setName(String name) {
-		if(name==null) 
-			throw new RuntimeException("Given parameter(name) is null");
-		else
+		  if(name == null)
+	          throw new RuntimeException("Given parameter(name) is null");
+//	      if(name.matches("[A-Z][a-z]*"))
+//	          throw new RuntimeException("Given name is not valid");
+	      else
 		this.name = name;
 	}
 
@@ -53,11 +95,16 @@ public abstract class Person {
 		return lastName;
 	}
 
+	//dedicated setter unique constraint
 	public void setLastName(String lastName) {
 		if(lastName==null)
 			throw new RuntimeException("Given parameter(sponsor) is null");
-		else
+		else {
+			if(this.personExtent.stream().anyMatch(p->p.getLastName().equals(lastName)))
+				throw new  RuntimeException("Last Name should be unique");
+			else
 		this.lastName = lastName;
+		}
 	}
 
 	public int getExperienceCareer() {
@@ -80,19 +127,33 @@ public abstract class Person {
 		}
 
 		public static Set<Person> getPersonExtent() {
-			return new HashSet<>(personExtent);
+			return new TreeSet<>(personExtent);
 		}
 		
 		public int getAge() {
 			return age;
 		}
 
-
+		//attributes constraints
 		public void setAge(int age) {
-			if(age<18)
-				throw new IllegalArgumentException("Age can't be less  than 18");
-			else
+			if(age<minAge || age>maxAge )
+				throw new IllegalArgumentException(String.format("Age can't be less than (%s) and more than %s", minAge,maxAge));
+			else {
+				if(age < this.age) 
+					throw new IllegalArgumentException("Age never decreases.");
+				else
 			this.age = age;
+			}
+		}
+		
+		public int getId() {
+			return person_id;
+		}
+
+
+
+		public void setId(int person_id) {
+			this.person_id = person_id;
 		}
 
 	

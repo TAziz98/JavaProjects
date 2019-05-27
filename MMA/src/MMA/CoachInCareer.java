@@ -2,8 +2,21 @@ package MMA;
 
 import java.util.stream.Collectors;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="COACH_IN_CAREER")
 public class CoachInCareer extends Fighter implements ICoach {
 
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	private int coachInCareer_id;
+//	
+	
 	private Integer salaryAsCoach;
 	private int experienceAsCoach;
 	

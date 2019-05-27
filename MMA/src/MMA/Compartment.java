@@ -4,75 +4,75 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+//FIXED
+@Entity
+@Table(name="COMPARTMENT_TABLE")
 public class Compartment implements TrainingArena,BattleArena {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int compartment_id;
+	
 	 private String Name;
-	 private int rentPrice;
-	 private int holdingDownPrice;
-	 private int tax;
+	 private Integer rentPrice;
+	 private Integer holdingDownPrice;
 	 private final int pricePerDayForTraining = 120;
 	 private final int pricePerDayForEvent = 800;
-	 private Set<CompartmentType> compartments = EnumSet.noneOf(CompartmentType.class);
-	  
 	 
+	 @ElementCollection
+	 private Set<CompartmentType> compartments;
+	 // EnumSet.noneOf(CompartmentType.class);
+	  
+	
 	public Set<CompartmentType> getCompartments() {
 		return new HashSet<>(compartments);
 	}
 
 
-	public Compartment(String Name,CompartmentType compartmentType,int periodOfTime) {
+	public Compartment(String Name,Integer periodOfTime, Integer periodOfHoldingDown, EnumSet<CompartmentType> compartmentTypes) {
 		this.setName(Name);
-		this.addCompartment(compartmentType,  periodOfTime);
+		this.compartments=compartmentTypes;
+		//this.addCompartment(compartmentType,  periodOfTime);
+		if(compartmentTypes!=null && !compartmentTypes.isEmpty()) {
+			if(compartmentTypes.contains(CompartmentType.BattleArena)) 
+				this.setHoldDownPrice(periodOfHoldingDown);
+			else this.holdingDownPrice = null;
+			if(compartmentTypes.contains(CompartmentType.TrainingArena))
+				this.setRentPrice(periodOfTime);
+			else this.rentPrice = null;
+		} else throw new RuntimeException("Compartment type is empty or null");
 	}
 
+	
 	 
-	 public void addCompartment(CompartmentType compartmentType, int periodOfTme) {
-		 if(compartmentType==null) 
-		 throw new RuntimeException("Given parameter(compartmentType) is null");
-		 else {
-		 if(compartments.contains(compartmentType)) 
-		 throw new RuntimeException("Given parameter(compartmentType) exists");
-		 else {
-		 compartments.add(compartmentType);
-		 if(compartmentType.equals(CompartmentType.BattleArena))
-		 this.setHoldDownPrice(periodOfTme);
-		 else
-		 this.setRentPrice(periodOfTme);	 
-		 }
-		 }
-	 }
-
-	 
-	 public void removeComparment(CompartmentType compartmentType) {
-		 if(compartmentType==null)
-	     throw new RuntimeException("Given parameter(compartmentType) is null");
-		 else {
-			  if(!compartments.contains(compartmentType))
-			  throw new RuntimeException("Compartments doesn't contain such compartment type ");
-			  else {
-			 compartments.remove(compartmentType);
-			  if(compartmentType.equals(CompartmentType.BattleArena))
-					 this.setHoldDownPrice(0);
-			  else {
-				  this.setRentPrice(0);
-			      this.setTax(0);
-			  }
-			  }
-		 }
-		 
-	 }
 	 @Override
-	 public void setRentPrice(int periodOfTime) {
+	 public void setRentPrice(Integer periodOfTime) {
+		    if(compartments.contains(CompartmentType.TrainingArena)) {
+		    if(periodOfTime==null)
+		    throw new RuntimeException("Given parameter is null");
+		    else {
 		    if(periodOfTime<0 )
 		    throw new IllegalArgumentException("Can't be negative");
-		    else {
-		    this.rentPrice=(periodOfTime*pricePerDayForTraining)+this.tax;
+		    else 
+		    this.rentPrice=(periodOfTime*pricePerDayForTraining);
 		    }
+		    } else throw new RuntimeException("Compartment type doesn't correspond");
+		    	
 
 }
     @Override
-        public int getRentPrice() {
+        public Integer getRentPrice() {
      	// TODO Auto-generated method stub
-    	return rentPrice;
+    	 if(!compartments.contains(CompartmentType.TrainingArena))
+    	 throw new RuntimeException("Compartment type doesn't correspond");
+    	 else
+    	 return rentPrice;
      }
     
 
@@ -87,20 +87,28 @@ public class Compartment implements TrainingArena,BattleArena {
 
 
 	@Override
-	public void setHoldDownPrice(int periodOfHoldingDown) {
+	public void setHoldDownPrice(Integer periodOfHoldingDown) {
 		// TODO Auto-generated method stub
+		 if(compartments.contains(CompartmentType.BattleArena)) {
+			    if(periodOfHoldingDown==null)
+			    throw new RuntimeException("Given parameter is null");
+			    else {
 		 if(periodOfHoldingDown<0)
 			    throw new IllegalArgumentException("Can't be negative");
-			    else {
+			    else 
 			    this.holdingDownPrice=periodOfHoldingDown*pricePerDayForEvent;
 			    }
+		 } else throw new RuntimeException("Compartment type doesn't correspond");
 		
 	}
 
 	@Override
-	public int getHoldDownPrice() {
+	public Integer getHoldDownPrice() {
 		// TODO Auto-generated method stub
-		return holdingDownPrice;
+		 if(!compartments.contains(CompartmentType.BattleArena))
+		 throw new RuntimeException("Compartment type doesn't correspond");
+		 else
+		 return holdingDownPrice;
 	}
 
 
@@ -115,22 +123,6 @@ public class Compartment implements TrainingArena,BattleArena {
 		else
 		this.Name = name;
 	}
-
-
-	
-	public void setTax(int tax) {
-		// TODO Auto-generated method stub
-		if(tax<0)
-			  throw new IllegalArgumentException("Can't be negative");	
-				else
-				this.tax = tax;
-		
-	}
-
-
-	public int getTax() {
-		return tax;
-	}
 		  
 	  public int getPricePerDayForTraining() {
 			return pricePerDayForTraining;
@@ -141,6 +133,44 @@ public class Compartment implements TrainingArena,BattleArena {
 			return pricePerDayForEvent;
 		}
 
-
+	
+		 /*
+		 public void addCompartment(CompartmentType compartmentType, int periodOfTme) {
+			 if(compartmentType==null) 
+			 throw new RuntimeException("Given parameter(compartmentType) is null");
+			 else {
+			 if(compartments.contains(compartmentType)) 
+			 throw new RuntimeException("Given parameter(compartmentType) exists");
+			 else {
+			 compartments.add(compartmentType);
+			 if(compartmentType.equals(CompartmentType.BattleArena))
+			 this.setHoldDownPrice(periodOfTme);
+			 else
+			 this.setRentPrice(periodOfTme);	 
+			 }
+			 }
+		 }
+	*/
+		 
+		/*
+		 public void removeComparment(CompartmentType compartmentType) {
+			 if(compartmentType==null)
+		     throw new RuntimeException("Given parameter(compartmentType) is null");
+			 else {
+				  if(!compartments.contains(compartmentType))
+				  throw new RuntimeException("Compartments doesn't contain such compartment type ");
+				  else {
+				 compartments.remove(compartmentType);
+				  if(compartmentType.equals(CompartmentType.BattleArena))
+						 this.setHoldDownPrice(0);
+				  else {
+					  this.setRentPrice(0);
+				      this.setTax(0);
+				  }
+				  }
+			 }
+			 
+		 }
+		 */
 	
 }

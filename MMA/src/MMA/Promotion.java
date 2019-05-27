@@ -3,21 +3,44 @@ package MMA;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.Vector;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-//Ok
-public class Promotion implements Serializable {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+//Ok
+@Entity
+@Table(name="PROMOTION")
+public class Promotion implements Serializable{
+ 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int promotion_id;
+	
 	private String promotionName;
 	
 	public Promotion(String promotionName) {
 		this.setPromotionName(promotionName);
 	}
+	
+	public Promotion() {
+		
+	}
+	
 	public void setPromotionName(String promotionName) {
 		if (promotionName == null)
 			throw new NullPointerException("Promotions name can't be null");
@@ -30,49 +53,73 @@ public class Promotion implements Serializable {
 	}
 	
 	//-------------------->|Association With An Attribute|
-		private List<Contract> listOfContracts = new ArrayList<>();
-		
+	
+	   // ordered for an association
+	    @OneToMany(mappedBy = "promotion")
+		private Set<Contract> listOfContracts = new TreeSet<>();
+	  
+
 		public void addContract(Contract contract) {
-			if (contract.getPromotion() != this)
-				throw new IllegalArgumentException("Contract with different promotion");
-			if (this.listOfContracts.contains(contract))
-				throw new IllegalArgumentException("Contract already signed");
-			else
-				listOfContracts.add(contract);
-		}
-		
-
-		public void removeContract(Contract contract) {
-			System.out.println(contract.getPromotion().getPromotionName());
-			if (contract.getPromotion() != this)
-				throw new IllegalArgumentException("Contract with different promotion");
+			if (contract.getPromotion() != this || contract.getPromotion()==null)
+				throw new RuntimeException("Contract with different promotion or null");
+		         duplicatesVector.add(contract);  
 			if (!this.listOfContracts.contains(contract))
-				throw new IllegalArgumentException("Contract doesn't exist");
-			else
-				listOfContracts.remove(contract);
-		}
-
+				listOfContracts.add(contract);
+//			else
+//				throw new IllegalArgumentException("Contract already signed");
+			
+		}     
 		
-		public List<Contract> getListOfContracts() {
-			return new ArrayList<>(listOfContracts);
+		public void removeContract(Contract contract) {
+			if (contract.getPromotion() != this || contract.getPromotion()==null)
+				throw new RuntimeException("Contract with different promotion or null");
+			removeDuplicates(contract);
+			if (this.listOfContracts.contains(contract))
+				listOfContracts.remove(contract);
+//			else
+//				throw new IllegalArgumentException("Contract doesn't exist");
+				
+		}
+  
+		  
+	    @OneToMany(mappedBy = "promotion")
+		private List<Contract> duplicatesVector = new ArrayList<>();
+
+	    
+		public void removeDuplicates(Contract contract) {
+			Iterator<Contract> it = duplicatesVector.iterator();
+			while (it.hasNext()) {
+			    Contract s = it.next();
+			    if(s.equals(contract))
+			    it.remove();
+			}
+//			for(Contract myContract : duplicatesVector)
+//				if(myContract.equals(contract))
+//			duplicatesVector.remove(myContract);
+		}
+		
+		public Vector<Contract> getDuplicatesVector() {
+			return new Vector<>(duplicatesVector);
+		}
+		
+		
+		public  Set<Contract> getListOfContracts() {
+			return new TreeSet<>(listOfContracts);
 		}
 		//------------------> 
 		
 
 	
 	//-----------------> |Composition Association|
+		@OneToMany
     private Set<Event> listOfEvents = new HashSet<Promotion.Event>();
 
+    
     //add
     public void organizeEvent(String eventName, Date dateOfEvent) {
 		if(eventName==null || dateOfEvent==null)
 			throw new IllegalArgumentException("Invalid arguments");
 		else {
-	/*	if(listOfEvents
-				.stream()
-				.filter(event->event.getEventName().equals(eventName))
-				.filter(event->event.getDateOfEvent().equals(dateOfEvent))
-				.collect(Collectors.toList()).size()>0) { */
 			if(listOfEvents
 					.stream()
 					.anyMatch(event->event.getEventName().equals(eventName))){	
@@ -125,7 +172,14 @@ public class Promotion implements Serializable {
 	}
 	
 	
+	@Entity
+	@Table(name="EVENT")
 	private class Event{
+		
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private int event_id;
+		
 		private String eventName;
 		private Date dateOfEvent;
 		
@@ -134,6 +188,8 @@ public class Promotion implements Serializable {
 			this.setDateOfEvent(dateOfEvent);
 			
 		}
+		
+		
 
 		public String getEventName() {
 			return eventName;

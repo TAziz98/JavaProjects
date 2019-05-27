@@ -12,16 +12,51 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 //Ok
 //don't have removeOponent method, because list of oponents should stay in history of a fighter.
+
+@Entity
+@Table(name="STATISTICS")
 public class Statistics implements Serializable {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int statistics_id;
+	
+	@Column(name="number_of_wins", nullable = false)
 	private int numberOfWins;
+	
+	@Column(name="number_of_losts", nullable = false)
 	private int numberofLosts;
+	
+	@Column(name="number_of_stand_offs", nullable = false)
 	private int numberOfStandOffs;
+	
+	@Column(name="division")
+	@Enumerated(EnumType.STRING)
 	private Division division;
+	
+	@Column(name="division_rating")
+	@Enumerated(EnumType.STRING)
 	private DivisionRating divisionRating;
 
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinTable(name="STATISTICS_LIST_OF_OPONENTS", joinColumns = @JoinColumn(name="statistics_id"), inverseJoinColumns = @JoinColumn(name="fighter_id"))
+	@ElementCollection
 	private List<Fighter> listOfOponents;
 
 	public Statistics(int numberOfWins, int numberOfStandOffs, int numberofLosts, Division division,DivisionRating divisionRating) {
@@ -35,6 +70,10 @@ public class Statistics implements Serializable {
 //	this.setListOfOponents(listOfOponents);
 	}
 
+	public Statistics() {
+		
+	}
+	
 	public void addOponent(Fighter oponent) {
 		if (oponent == null)
 			throw new NullPointerException("No oponents applied");
@@ -146,8 +185,15 @@ public class Statistics implements Serializable {
 			this.divisionRating = divisionRating;
 	}
 
+//	public String toString() {
+//		return "Proffesional Record [" + numberOfWins + "-" + numberOfStandOffs + "-" + numberofLosts + "]";
+//	}
+	
+	@Override
 	public String toString() {
-		return "Proffesional Record [" + numberOfWins + "-" + numberOfStandOffs + "-" + numberofLosts + "]";
+		return "Statistics [statistics_id=" + statistics_id + ", numberOfWins=" + numberOfWins + ", numberofLosts="
+				+ numberofLosts + ", numberOfStandOffs=" + numberOfStandOffs + ", division=" + division
+				+ ", divisionRating=" + divisionRating + ", listOfOponents=" + listOfOponents + "]";
 	}
 
 }

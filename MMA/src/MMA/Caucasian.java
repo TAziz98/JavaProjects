@@ -1,5 +1,10 @@
 package MMA;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="CAUCASIAN")
 public class Caucasian extends Ethnicity {
 	private boolean doping_test; 
 
@@ -9,6 +14,9 @@ public class Caucasian extends Ethnicity {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public Caucasian() {
+		
+	}
 
 	public boolean isDoping_testClear() {
 		return doping_test;

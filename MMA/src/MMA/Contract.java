@@ -1,17 +1,48 @@
 package MMA;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-public class Contract implements Serializable {
+@Entity
+@Table(name="CONTRACT")
+public class Contract implements Serializable,Comparable<Contract> {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int contract_id;
+	
 	//mandatory
+	@Column(name="number_of_fights", nullable = false)
 	private int numberOfFightsSettledByPromotion;
+	
+	@Column(name="honorarium", nullable = false)
 	private int honorariumSettledByPromotion;
+	
 	// optional Attribute
+	@Column(name="performance_of_night", nullable = true)
 	private Integer performanceOfNight;
+	
+	//checked
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="fighter_id")
 	private Fighter fighter;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="promotion_id")
 	private Promotion promotion;
-	// class attribute
+	
+	// class attribute - don't know yet hibernate
 	private static int thresholdForSigningContract = 15;
 
 	public Contract(int numberOfFightsSettledByPromotion, int honorariumSettledByPromotion, Integer bonus,
@@ -24,8 +55,12 @@ public class Contract implements Serializable {
 		setPromotion(promotion);
 	}
 	
+	public Contract() {
+		
+	}
+	
 ////-------------------->|Association With An Attribute|
-	private void setFighter(Fighter fighter) {
+	public void setFighter(Fighter fighter) {
 		if (fighter == null)
 			throw new IllegalArgumentException("No fighter applied");
 		else {
@@ -34,11 +69,11 @@ public class Contract implements Serializable {
 		}
 	}
 
-	private void setPromotion(Promotion promotion) {
+	public void setPromotion(Promotion promotion) {
 		if (promotion == null)
 			throw new IllegalArgumentException("No promotion applied");
 		else {
-			this.promotion = promotion;
+	this.promotion = promotion;
 			this.promotion.addContract(this);
 		}
 	}
@@ -56,8 +91,6 @@ public class Contract implements Serializable {
 		if (promotion == null)
 			throw new IllegalArgumentException("No promotion applied");
 		else {
-			System.out.println("me");
-			
 			promotion.removeContract(this);
 			this.promotion = null;
 		}
@@ -126,5 +159,13 @@ public class Contract implements Serializable {
 		this.performanceOfNight = bonus;
 	}
 	}
+
+	@Override
+	public int compareTo(Contract contract) {
+		// TODO Auto-generated method stub
+		return this.getHonorariumSettledByPromotion()-contract.getHonorariumSettledByPromotion();
+	}
+
+	
 	
 }

@@ -1,8 +1,8 @@
 package MMA;
 
 public interface BattleArena {
-	public void setHoldDownPrice(int periodHoldingDown);
-	public int getHoldDownPrice();
+	public void setHoldDownPrice(Integer periodHoldingDown);
+	public Integer getHoldDownPrice();
 
 
 }

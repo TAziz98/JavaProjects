@@ -1,13 +1,36 @@
 package MMA;
 
+//FIXED
+
+
+
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Entity
+@Table(name="WORKOUT")
 public class Workout implements FullContact,Grappling,CrossFit {
    
+	  
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int workout_id;
+		
 	private String nameOfWorkout;
+	
+	@ElementCollection
 	private List<String> listOfCounterAttacks ;
+	
+	@ElementCollection
 	private List<String> listOfTechniques;
+	
+	@ElementCollection
     private List<String> listOfActivities;
     
     private WorkoutTypes workoutType;
@@ -46,6 +69,9 @@ public class Workout implements FullContact,Grappling,CrossFit {
 	@Override
 	public int getNumberOfActivities() {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.CrossFit))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else
 		return listOfActivities.size();
 	}
 
@@ -67,6 +93,9 @@ public class Workout implements FullContact,Grappling,CrossFit {
 	@Override
 	public void removeActivity(String activity) {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.CrossFit))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else {
 		if(activity==null)
 			throw new RuntimeException("Given parameter(activity) is null");
 		    else {
@@ -75,18 +104,25 @@ public class Workout implements FullContact,Grappling,CrossFit {
 			else
 				listOfActivities.remove(activity);
 		}
+		}
 		
 	}
 
 	@Override
 	public List<String> getListOfActivities() {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.CrossFit))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else
 		return new ArrayList<String>(listOfActivities);
 	}
 
 	@Override
 	public int identifyHeartRate(Fighter fighter) {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.CrossFit))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else
 		return 220-fighter.getAge()*getNumberOfActivities();
 	}
 
@@ -101,6 +137,9 @@ public class Workout implements FullContact,Grappling,CrossFit {
 	@Override
 	public int getNumberOfCounterAttacks() {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.Grappling))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else
 		return listOfCounterAttacks.size() ;
 	}
 
@@ -122,6 +161,9 @@ public class Workout implements FullContact,Grappling,CrossFit {
 	@Override
 	public void removeCounterAttack(String counterAttack) {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.Grappling))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else {
 		if(counterAttack==null)
 			throw new RuntimeException("Given parameter(counterAttack) is null");
 			else {
@@ -130,12 +172,16 @@ public class Workout implements FullContact,Grappling,CrossFit {
 				else
 					throw new RuntimeException("Given parameter(counterAttack) is not in List");
 			}
+		}
 		
 	}
 
 	@Override
 	public List<String> getListOfCounterAttacks() {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.Grappling))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else
 		return new ArrayList<>(listOfCounterAttacks);
 	}
 	
@@ -149,6 +195,9 @@ public class Workout implements FullContact,Grappling,CrossFit {
 	@Override
 	public int getNumberOfTechniques() {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.FullContact))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else
 		return listOfTechniques.size();
 	}
 
@@ -170,6 +219,9 @@ public class Workout implements FullContact,Grappling,CrossFit {
 	@Override
 	public void removeTechnique(String technique) {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.FullContact))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else {
 		if(technique==null)
 			throw new RuntimeException("Given parameter(technique) is null");
 		    else {
@@ -178,13 +230,16 @@ public class Workout implements FullContact,Grappling,CrossFit {
 			else
 		    throw new RuntimeException("Given parameter(technique) is not in list");
 		}
-		
+		}
 		
 	}
 
 	@Override
 	public List<String> getListOfTechniques() {
 		// TODO Auto-generated method stub
+		if(!this.workoutType.equals(WorkoutTypes.FullContact))
+			throw new RuntimeException("Workout types doesn't correspond ");
+		else
 		return new ArrayList<String>(listOfTechniques);
 	}
 
