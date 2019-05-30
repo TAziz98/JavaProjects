@@ -39,6 +39,7 @@ public class Contract implements Serializable,Comparable<Contract> {
 	@JoinColumn(name="fighter_id")
 	private Fighter fighter;
 	
+	//should be corrected
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="promotion_id")
 	private Promotion promotion;
