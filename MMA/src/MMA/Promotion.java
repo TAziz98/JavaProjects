@@ -157,6 +157,8 @@ public class Promotion implements Serializable{
 		}
 	}
 	
+	//getLasEvent()
+	
 	public List<String> getEventByDate(Date dateOfEvent) {
 		if(dateOfEvent==null)
 		 throw new IllegalArgumentException("Date of event is null");
