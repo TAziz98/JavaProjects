@@ -1,5 +1,6 @@
 package MMA;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,15 +18,15 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import GUI.Criteria;
 import util.HibernateUtil;
 
 
 
 public class HibernateTest {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		
 	      Session session = HibernateUtil.getSessionFactory().openSession();	 
 	  try {
 		  Statistics statistics = new Statistics(27, 0, 0, Division.LIGHTWEIGHT, DivisionRating.Champion);
@@ -54,22 +55,22 @@ public class HibernateTest {
 		teamKhabirov.setTeamsName("Khabirov Team");
 		teamKhabirov.doWorkout(workout);
 		Khabib.setTeam(teamKhabirov);
-		Promotion promotion = new Promotion("UFC");
+		Promotion promotion = new Promotion("UFC",1971);
 		 Contract contract = new Contract(1, 3000, new Integer(2000), John, promotion);
 		 Contract contract2 = new Contract(3, 500000, new Integer(2000), Khabib, promotion);
 		 Contract contract3 = new Contract(2, 60000, new Integer(2000), Tony, promotion);
 		 Contract contract4 = new Contract(4, 900, new Integer(2000), Edson, promotion);
 		 
-		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-			Date date = format.parse( "2019-07-30" ); 
-			promotion.organizeEvent("Global Fight Night 23",date);
-			promotion.organizeEvent("Global Fight Night 24",date);
-			promotion.organizeEvent("Global Fight Night 26",date);
+		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = format.parse( "31/12/2020" ); 
+			Event.organize(promotion,"Global Fight Night 23",new Date(), "Square Garden", 178);
+			Event.organize(promotion,"Global Fight Night 24",new Date(), "Moscow Olimiyskiy", 270);
+		   Event.organize(promotion,"Global Fight Night 26",date, "Kohi Borbad", 89);
 		    
 		    
 	
 		 
-		 SponsorshipAssociation Reebok = new SponsorshipAssociation("Reebok", John);
+		 SponsorshipAssociation Reebok = new SponsorshipAssociation("Reebok","h@gmail.com","+48731676861", John);
 		 Reebok.sponsorAFighter(Tony);
 		 Reebok.sponsorAFighter(Edson);
 		 Reebok.sponsorSpecialFighter(John);
@@ -95,39 +96,23 @@ public class HibernateTest {
 		session.save(contract3);
 		session.save(contract4);
 		session.save(Reebok);
+		
 		session.getTransaction().commit();
-		System.out.println(Khabib.getAnnualSalary());
 		System.out.println("row added");
 		contract.setPromotion(promotion);
 		
 		   contract.setPromotion(promotion);
 		   contract.setPromotion(promotion);
-		    System.out.println("-----------------------list of contracts");
-		    for(Contract contracts : promotion.getListOfContracts())
-		    	System.out.println(contracts.getHonorariumSettledByPromotion());
-		        System.out.println();
-		    System.out.println("-----------------------duplicates");
-		    for(Contract myContract : promotion.getDuplicatesVector())
-		    System.out.println(myContract.getHonorariumSettledByPromotion());
-		    System.out.println("-----------------------list of contracts");
-	//	 promotion.removeContract(contract);
-		    for(Contract myContracts : promotion.getListOfContracts())
-		        System.out.println(myContracts.getHonorariumSettledByPromotion());
-		    System.out.println("-----------------------duplicates");
-		    for(Contract myContract : promotion.getDuplicatesVector())
-		    System.out.println(myContract.getHonorariumSettledByPromotion());
-		    for(Contract list :promotion.getListOfContracts() )
-		    System.out.println(list.getFighter().getAge());
+		   
+		   Criteria criteria = new Criteria();
+			criteria.show();
+		    
   }
   finally {
 	  session.close();
 //	factory.close();
-}
-	
-
-}
-
-	
+  }
+	}
 	
 
 }

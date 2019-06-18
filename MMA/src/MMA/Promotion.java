@@ -2,6 +2,7 @@
 package MMA;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,14 +16,16 @@ import java.util.Vector;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.management.RuntimeErrorException;
+import javax.persistence.*;
+
+import org.hibernate.Session;
+import org.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
+import util.HibernateUtil;
 
 //Ok
 @Entity
@@ -32,16 +35,41 @@ public class Promotion implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int promotion_id;
+		
+	private Integer yearOfEstablishment;
+
+	private static TreeSet<Event> eventExtent = new TreeSet<>(Comparator.reverseOrder());
 	
 	@Column(name="promotion_name",length=30)
 	private String promotionName;
 	
-	public Promotion(String promotionName) {
+	public Promotion(String promotionName, Integer yearOfEstablishment) {
 		this.setPromotionName(promotionName);
+		this.setYearOfEstablishment(yearOfEstablishment);
 	}
 	
 	public Promotion() {
 		
+	}
+	
+	public static Promotion findPromotionByName(String promotionName) {
+		Promotion promotion = null;
+		 Session session = HibernateUtil.getSessionFactory().openSession();
+		 try {
+			session.beginTransaction();
+			
+			String hql = "SELECT p FROM Promotion p " +
+		             "WHERE promotionName ='" + promotionName + "'";
+			Query query = session.createQuery(hql);
+		    promotion = (Promotion)query.uniqueResult();
+			if(promotion==null) 
+			throw new RuntimeException("fighter is null");
+	  }
+		   finally {
+		   session.close();		
+		}
+		 
+		 return promotion;
 	}
 	
 	public void setPromotionName(String promotionName) {
@@ -114,24 +142,53 @@ public class Promotion implements Serializable{
 
 	
 	//-----------------> |Composition Association|
-	@OneToMany(cascade = CascadeType.ALL)
-    private Set<Event> listOfEvents = new HashSet<Promotion.Event>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "promotion")
+    private Set<Event> listOfEvents = new HashSet<Event>();
 
     
     //add
-    public void organizeEvent(String eventName, Date dateOfEvent) {
-		if(eventName==null || dateOfEvent==null)
-			throw new IllegalArgumentException("Invalid arguments");
-		else {
-			if(listOfEvents
-					.stream()
-					.anyMatch(event->event.getEventName().equals(eventName))){	
-     	    throw new RuntimeException("This event is already organized");
-		}else 
-		listOfEvents.add(new Event(eventName, dateOfEvent));
-		}
-
+//    public void organizeEvent(String eventName, Date dateOfEvent) {
+//		if(eventName==null || dateOfEvent==null)
+//			throw new IllegalArgumentException("Invalid arguments");
+//		else {
+//			if(listOfEvents
+//					.stream()
+//					.anyMatch(event->event.getEventName().equals(eventName))){	
+//     	    throw new RuntimeException("This event is already organized");
+//		}else 
+//		listOfEvents.add(new Event(eventName, dateOfEvent));
+//		}
+//
+//	}
+//    
+	
+	public Integer getYearOfEstablishment() {
+		return yearOfEstablishment;
 	}
+
+	public void setYearOfEstablishment(Integer yearOfEstablishment) {
+		if(yearOfEstablishment==null)
+			throw new RuntimeException("parameter is null");
+		else
+		this.yearOfEstablishment = yearOfEstablishment;
+	}
+	
+	public void organizeEvent(Event event) {
+		System.out.println("****"+eventExtent.size());
+		if(!listOfEvents.contains(event)) {
+		if (event==null ) {
+		throw new RuntimeException("Given parameter is null");
+		}
+		if(this.eventExtent.stream().anyMatch(p->p.getEventName().equals(event.getEventName()))) {
+	    throw new RuntimeException("This event is alredy oraganized");
+		}
+		listOfEvents.add(event); 
+		eventExtent.add(event);
+		
+		 
+		}
+	}
+
 
     //remove
 	public void cancelEvent(String eventName) {
@@ -150,7 +207,8 @@ public class Promotion implements Serializable{
 			.filter(event->event.getEventName().equals(eventName))
 			.filter(event->event.getDateOfEvent().after(new Date()))
 			.findFirst()
-            .map(event->listOfEvents.remove(event));
+            .map(event->listOfEvents.remove(event))
+            .map(event->eventExtent.remove(event));
 			}
 			else
 				throw new RuntimeException("No such event was organized");	
@@ -168,60 +226,54 @@ public class Promotion implements Serializable{
 		.filter(event->event.getDateOfEvent().equals(dateOfEvent))
 		.map(event->event.getEventName())
 		.collect(Collectors.toList());
+	
 		}
 		
 	}
+	
+
+	public static List<Event> getEventsByDate(String dateOfEvent) {
+	List<Event> events = new ArrayList<Event>();
+	 Session session = HibernateUtil.getSessionFactory().openSession();
+	 try {
+		session.beginTransaction();
+		String hql = "SELECT e FROM Event e " +
+	             "WHERE e.dateOfEvent='" + dateOfEvent + "'";
+		Query query = session.createQuery(hql);
+		events = query.list();
+	}
+	   finally {
+		   session.close();		
+		}
+	return events;
+	}
+	
+	public static Event getLastEventByDate() {
+		List<Event> events = new ArrayList<Event>();
+		 Session session = HibernateUtil.getSessionFactory().openSession();
+		 try {
+			session.beginTransaction();
+			String hql = "SELECT e FROM Event e";
+			Query query = session.createQuery(hql);
+			events = query.list();
+			
+		}
+		   finally {
+			   session.close();		
+			}
+				return Collections.max(events, Comparator.comparing(event -> event.getDateOfEvent()));
+
+		}
+
+	
+	
 	
 	public Set<Event> getListOfEvents() {
 		return new HashSet<>(listOfEvents);
 	}
-	
-	
-	@Entity
-	@Table(name="EVENT")
-	private class Event{
-		
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private int event_id;
-		
-		private String eventName;
-		private Date dateOfEvent;
-		
-		private Event(String eventName, Date dateOfEvent) {
-			this.setEventName(eventName);
-			this.setDateOfEvent(dateOfEvent);
-			
-		}
-		
-		private Event() {
-			
-		}
 
-		public String getEventName() {
-			return eventName;
-		}
 
-		public void setEventName(String eventName) {
-			if (eventName == null)
-				throw new IllegalArgumentException("Name of event is null");
-			else
-			this.eventName = eventName;
-		}
 
-		public Date getDateOfEvent() {
-			return dateOfEvent;
-		}
-
-		public void setDateOfEvent(Date dateOfEvent) {
-			if (dateOfEvent == null || !(dateOfEvent instanceof Date))
-				throw new IllegalArgumentException("Invalid date");
-			else
-			this.dateOfEvent = dateOfEvent;
-		}
-		
-		
-	}
 	
 	//------------------>
 

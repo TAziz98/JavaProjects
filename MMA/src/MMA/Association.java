@@ -16,6 +16,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+
 @Entity
 @Table(name="ASSOCIATION")
 public class Association {
@@ -73,6 +76,8 @@ public class Association {
 		}	
 		
 	}
+	
+
 	
 	public int getAssociation_id() {
 		return association_id;

@@ -3,6 +3,7 @@ package MMA;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,6 +19,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import util.HibernateUtil;
 
 @Entity
 @Table(name="Person")
@@ -116,6 +122,33 @@ public abstract class Person implements Comparable<Person> {
 		}
 	}
 
+	public static Integer getAnnualSalary() {
+		 Contract currentContract = null;
+		 Integer bonus = null;
+		 Session session = HibernateUtil.getSessionFactory().openSession();
+		 try {
+			session.beginTransaction();
+			
+			String hql ="SELECT e FROM Person e  "+
+			"WHERE e.ethnicity.ethnicityName ='Caucasian' ";
+					//"SELECT E FROM Person P  " +
+		          //   "WHERE P.name='Khabib'";
+			Query query = session.createQuery(hql);
+			List list =   query.list();
+			System.out.println(list.size());
+//			currentContract = session.get(Contract.class, this.getId());
+//			if(currentContract==null) 
+//			throw new RuntimeException("Fighter does not have such Contract.");
+//			if (bonus == null)
+//			bonus = 0;
+		  }
+		   finally {
+		   session.close();
+			
+		}
+		return 0;
+			//	currentContract.getHonorariumSettledByPromotion()*currentContract.getNumberOfFightsSettledByPromotion()+ bonus;
+	}
 	public int getExperienceCareer() {
 		return experienceCareer;
 	}

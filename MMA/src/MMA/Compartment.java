@@ -6,6 +6,11 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import util.HibernateUtil;
+
 
 //FIXED
 @Entity
@@ -144,6 +149,25 @@ public class Compartment implements TrainingArena,BattleArena {
 			return pricePerDayForEvent;
 		}
 
+		public static Compartment findComparmentByName(String compartmentName) {
+			Compartment compartment = null;
+			 Session session = HibernateUtil.getSessionFactory().openSession();
+			 try {
+				session.beginTransaction();
+				
+				String hql = "SELECT c FROM Compartment c " +
+			             "WHERE Name ='" + compartmentName + "'";
+				Query query = session.createQuery(hql);
+				compartment = (Compartment)query.uniqueResult();
+				if(compartment==null) 
+				throw new RuntimeException("fighter is null");
+		  }
+			   finally {
+			   session.close();		
+			}
+			 
+			 return compartment;
+		}
 	
 		 /*
 		 public void addCompartment(CompartmentType compartmentType, int periodOfTme) {

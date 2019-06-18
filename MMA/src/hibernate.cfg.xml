@@ -9,7 +9,7 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">0Ms#i|S6</property>
        
-       
+     
         <!-- JDBC connection pool (use the built-in) -->
         <property name="connection.pool_size">200</property>
 
@@ -32,7 +32,7 @@
 		<mapping class="MMA.Association"/>
 		<mapping class="MMA.Team"/>
 		<mapping class="MMA.SponsorshipAssociation"/>
-		<mapping class="MMA.Promotion$Event"/>
+		<mapping class="MMA.Event"/>
 		<mapping class="MMA.Statistics"/>
 		<mapping class="MMA.Person"/>
 		<mapping class="MMA.Fighter"/>
@@ -43,7 +43,6 @@
 		<mapping class="MMA.Caucasian"/>
 		<mapping class="MMA.Workout"/>
 		<mapping class="MMA.Compartment"/>
-		
 		
     </session-factory>
 </hibernate-configuration>

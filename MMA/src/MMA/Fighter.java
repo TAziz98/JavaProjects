@@ -30,6 +30,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.swing.text.Position;
 
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -37,6 +38,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
+import GUI.SponsorsList;
 import util.HibernateUtil;
 
 //Ok
@@ -58,7 +60,7 @@ public class Fighter extends Person implements Serializable {
 			super(officialname, lastName, experienceCareer, age, ethnicity);
 			this.setStatistics(statistics);
 			this.setNickName(nickName);
-		//	fighterExtent.put(this.nickName, this);
+			fighterExtent.put(this.nickName, this);
 			this.addFighterExtent(this);
 		}
 		
@@ -145,6 +147,23 @@ public class Fighter extends Person implements Serializable {
 					throw new RuntimeException("This sponsor does not sponsor this fighter");
 				}
 		}
+	}
+	
+	public static List<SponsorshipAssociation> getSponsorsList(String nickName) {
+		List<SponsorshipAssociation> sponsorsList = new ArrayList<>();
+		 Session session = HibernateUtil.getSessionFactory().openSession();
+		 try {
+			session.beginTransaction();
+			
+			String hql = "SELECT f.sponsors FROM Fighter f " +
+		             "WHERE f.nickName='" + nickName + "'";
+			Query query = session.createQuery(hql);
+			sponsorsList =  query.list();
+		 }
+	     finally {
+	        	session.close();
+	        }
+		return sponsorsList;
 	}
 	
 	public Set<SponsorshipAssociation> getSponsors() {
@@ -299,32 +318,58 @@ public class Fighter extends Person implements Serializable {
 	}
 
 //class Method
-	public static String ViewRecordByNickName(String nickName) {
+/*	public static Fighter ViewRecordByNickName(String nickName) {
+		System.out.println(nickName);
 		if (nickName == null)
 			throw new NullPointerException("NickName is not applied");
 		if (!fighterExtent.containsKey(nickName) && fighterExtent.get(nickName) == null)
 			throw new IllegalArgumentException("No fighters found");
 		else
-			return fighterExtent.get(nickName).getStatistics().toString(); // method overriding
-	}
+			return fighterExtent.get(nickName);
+	} */
 
+	public static Fighter ViewRecordByNickName(String nickName) {
+		Fighter fighter = null;
+		 Session session = HibernateUtil.getSessionFactory().openSession();
+		 try {
+			session.beginTransaction();
+			
+			String hql = "SELECT f FROM Fighter f " +
+		             "WHERE nick_name ='" + nickName + "'";
+			Query query = session.createQuery(hql);
+		    fighter = (Fighter)query.uniqueResult();
+			if(fighter==null) 
+			throw new RuntimeException("fighter is null");
+	  }
+		   finally {
+		   session.close();		
+		}
+		 
+		 return fighter;
+	}
+	
 
 	//derived attribute
-	public Integer getAnnualSalary() {
+	public static Integer getAnnualSalary(String nickName) {
+		System.out.println(nickName);
 		 Contract currentContract = null;
 		 Integer bonus = null;
 		 Session session = HibernateUtil.getSessionFactory().openSession();
 		 try {
 			session.beginTransaction();
-			currentContract = session.get(Contract.class, this.getId());
+			
+			String hql = "SELECT c FROM Contract c " +
+		             "WHERE c.fighter.nickName='" + nickName + "'";
+			Query query = session.createQuery(hql);
+		    currentContract = (Contract)query.uniqueResult();
+		    System.out.println(currentContract);
 			if(currentContract==null) 
 			throw new RuntimeException("Fighter does not have such Contract.");
 			if (bonus == null)
 			bonus = 0;
-		  }
+	  }
 		   finally {
-		   session.close();
-			
+		   session.close();		
 		}
 		return currentContract.getHonorariumSettledByPromotion()*currentContract.getNumberOfFightsSettledByPromotion()+ bonus;
 	}
@@ -338,7 +383,7 @@ public class Fighter extends Person implements Serializable {
 				.map(fighter -> fighter.getNickName()).collect(Collectors.toList());
 	}
 
-	public static List<String> ViewTopFighters(Division division) {
+/*public static List<String> ViewTopFighters(Division division) {
 		List<String> fighters = new ArrayList<String>();
 		DivisionRating rating[] = DivisionRating.values();
 		for (DivisionRating divisionRating : rating) {
@@ -347,7 +392,24 @@ public class Fighter extends Person implements Serializable {
 					.map(fighter -> fighter.getNickName()).forEach(fighter -> fighters.add(fighter));
 		}
 		return fighters;
-
+	}  */
+	
+	public static List<Fighter> ViewTopFighters(Division division) {
+		List<Fighter> fighters = new ArrayList<Fighter>();
+		 Session session = HibernateUtil.getSessionFactory().openSession();
+		 try {
+			session.beginTransaction();
+			String hql = "SELECT f FROM Fighter f " +
+		             "WHERE f.statistics.division='" + division + "'";
+			Query query = session.createQuery(hql);
+			fighters = query.list();
+		}
+		   finally {
+			   session.close();		
+			}
+		return fighters;
+		 
+	
 	}
 
 	public void setStatistics(Statistics statistics) {
@@ -478,19 +540,19 @@ public static void  removeFighterExtent(Fighter fighter) {
 	}
 	
 
-@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((association == null) ? 0 : association.hashCode());
-		result = prime * result + ((contract == null) ? 0 : contract.hashCode());
-		result = prime * result + ((nickName == null) ? 0 : nickName.hashCode());
-		result = prime * result + ((specialMakeSponsors == null) ? 0 : specialMakeSponsors.hashCode());
-		result = prime * result + ((sponsors == null) ? 0 : sponsors.hashCode());
-		result = prime * result + ((statistics == null) ? 0 : statistics.hashCode());
-		result = prime * result + ((team == null) ? 0 : team.hashCode());
-		return result;
-	}
+//@Override
+//	public int hashCode() {
+//		final int prime = 31;
+//		int result = 1;
+//		result = prime * result + ((association == null) ? 0 : association.hashCode());
+//		result = prime * result + ((contract == null) ? 0 : contract.hashCode());
+//		result = prime * result + ((nickName == null) ? 0 : nickName.hashCode());
+//		result = prime * result + ((specialMakeSponsors == null) ? 0 : specialMakeSponsors.hashCode());
+//		result = prime * result + ((sponsors == null) ? 0 : sponsors.hashCode());
+//		result = prime * result + ((statistics == null) ? 0 : statistics.hashCode());
+//		result = prime * result + ((team == null) ? 0 : team.hashCode());
+//		return result;
+//	}
 
 	@Override
 	public boolean equals(Object obj) {

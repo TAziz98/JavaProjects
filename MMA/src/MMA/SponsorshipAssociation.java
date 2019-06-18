@@ -29,11 +29,19 @@ public class SponsorshipAssociation {
 	@Column(name="association_name", length=30)
 	private String associationName;
 	
+	@Column(length=30)
+	private String contact_email;
+	
+
+	@Column(length=30)
+	private String phone_numb;
 		
  //------------------->Binary Association
 	
-	public SponsorshipAssociation(String associationName,Fighter fighter) {
+	public SponsorshipAssociation(String associationName, String contact_email, String phone_numb, Fighter fighter) {
 		this.setAssociationName(associationName);
+		this.setContact_email(contact_email);
+		this.setPhone_numb(phone_numb);
 		this.sponsorAFighter(fighter);
 	}
 	
@@ -137,6 +145,27 @@ public class SponsorshipAssociation {
 		return specialSponsoredFighters;
 	}
 
+	public String getContact_email() {
+		return contact_email;
+	}
+
+	public void setContact_email(String contact_email) {
+		if (contact_email == null)
+			throw new NullPointerException("null parameter applied");
+		else		
+		this.contact_email = contact_email;
+	}
+
+	public String getPhone_numb() {
+		return phone_numb;
+	}
+
+	public void setPhone_numb(String phone_numb) {
+		if (phone_numb== null)
+			throw new NullPointerException("null parameter applied");
+		else		
+		this.phone_numb = phone_numb;
+	}
 }
 
 
