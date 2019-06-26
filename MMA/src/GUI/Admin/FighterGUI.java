@@ -129,15 +129,15 @@ public class FighterGUI extends JFrame {
 		contentPane.add(lblAge);
 		
 		JLabel lblStatistics = new JLabel("Statistics");
-		lblStatistics.setBounds(41, 241, 46, 14);
+		lblStatistics.setBounds(41, 241, 80, 14);
 		contentPane.add(lblStatistics);
 		
 		JLabel lblWins = new JLabel("Wins");
-		lblWins.setBounds(158, 224, 28, 14);
+		lblWins.setBounds(148, 224, 38, 14);
 		contentPane.add(lblWins);
 		
 		JLabel lblLosts = new JLabel("Losts");
-		lblLosts.setBounds(216, 224, 28, 14);
+		lblLosts.setBounds(210, 224, 34, 14);
 		contentPane.add(lblLosts);
 		
 		textField_7 = new JTextField();
@@ -169,14 +169,13 @@ public class FighterGUI extends JFrame {
 		lblFighter.setBounds(232, 11, 70, 37);
 		contentPane.add(lblFighter);
 		
-		String values[]={"Flyweight", "Bantaweight", "Featherweight", "Lightweight","Welterweight", "Middleweight", "Lightheavyweight", "Heavyweight"};        
+		Division values[]={Division.FLYWEIGHT, Division.BANTAMWEIGHT, Division.FEATHERWEIGHT, Division.HEAVYWEIGHT,Division.LIGHTHEAVYWEIGHT, Division.LIGHTWEIGHT, Division.MIDDLEWEIGHT, Division.WELTERWEIGHT};        
 		JComboBox comboBox = new JComboBox(values);
-		comboBox.setBounds(339, 241, 86, 20);
+		comboBox.setBounds(339, 241, 100, 20);
 		comboBox.setBackground(SystemColor.inactiveCaption);
 		contentPane.add(comboBox);
 		
-		String values2[]= {"Champion", "TOP_1", "TOP_2", "TOP_3", "TOP_4", "TOP_5", "TOP_6",
-				"TOP_7", "TOP_8", "TOP_9", "TOP_10"};
+		DivisionRating values2[]= {DivisionRating.Champion, DivisionRating.TOP_1, DivisionRating.TOP_2, DivisionRating.TOP_3, DivisionRating.TOP_4, DivisionRating.TOP_5, DivisionRating.TOP_6, DivisionRating.TOP_7, DivisionRating.TOP_8, DivisionRating.TOP_9, DivisionRating.TOP_10};
 		JComboBox comboBox2 = new JComboBox(values2);
 		comboBox2.setBounds(449, 241, 86, 20);
 		comboBox2.setBackground(SystemColor.inactiveCaption);
@@ -184,98 +183,17 @@ public class FighterGUI extends JFrame {
 		
 		String values3[]= {"Afro-American", "Caucasian"};
 		JComboBox comboBox3 = new JComboBox(values3);
-		comboBox3.setBounds(152, 285, 86, 20);
+		comboBox3.setBounds(152, 285, 122, 20);
 		comboBox3.setBackground(SystemColor.inactiveCaption);
 		contentPane.add(comboBox3);
 		
+		
+
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				  switch(comboBox.getSelectedItem().toString()) {	
-				    
-					case "Flyweight" : 
-					 division = Division.FLYWEIGHT;	
-					 break;
-						
-					case "Bantaweight" : 
-						division =	Division.BANTAMWEIGHT;
-						break;
-						
-					case "Featherweight" : 
-						division = Division.FEATHERWEIGHT;	
-						break;
-						
-					case "Lightweight" : 
-						division =Division.LIGHTWEIGHT;
-						break;
-					
-						
-					case "Welterweight" : 
-						division = Division.WELTERWEIGHT;
-						break;
-						
-					case "Middleweight" : 
-						division = Division.MIDDLEWEIGHT;
-						break;
-						
-					case "Lightheavyweight" : 
-						division = Division.LIGHTHEAVYWEIGHT;	
-						break;
-						
-					case "Heavyweight" : 
-						division = Division.HEAVYWEIGHT;
-				        break;
-  }
-					
 				  
-				  switch(comboBox2.getSelectedItem().toString()) {	
-				    
-					case "Champion" : 
-					 rating = DivisionRating.Champion;	
-					 break;
-						
-					case "TOP_1" : 
-						rating =	DivisionRating.TOP_1;
-						break;
-						
-					case "TOP_2" : 
-						rating = DivisionRating.TOP_2;	
-						break;
-						
-					case "TOP_3" : 
-						rating =DivisionRating.TOP_3;
-						break;
-					
-						
-					case "TOP_4" : 
-						rating = DivisionRating.TOP_4;
-						break;
-						
-					case "TOP_5" : 
-						rating = DivisionRating.TOP_5;
-						break;
-						
-					case "TOP_6" : 
-						rating = DivisionRating.TOP_6;	
-						break;
-						
-					case "TOP_7" : 
-						rating = DivisionRating.TOP_7;
-				        break;
-				        
-					case "TOP_8" : 
-						rating = DivisionRating.TOP_8;
-				        break;
-				        
-					case "TOP_9" : 
-						rating = DivisionRating.TOP_9;
-				        break;
-				        
-					case "TOP_10" : 
-						rating = DivisionRating.TOP_10;
-				        break;
-}
 				  switch(comboBox3.getSelectedItem().toString()) {	
 				    
 					case "Afro-American" : 
@@ -289,11 +207,12 @@ public class FighterGUI extends JFrame {
 				
 				   Session session = HibernateUtil.getSessionFactory().openSession();	 
 					  try {
-						
-						Fighter fighter = new Fighter(textField.getText().toString(), textField_1.getText().toString(),textField_2.getText().toString(),Integer.parseInt(textField_3.getText().toString()),Integer.parseInt(textField_4.getText().toString()),
-								new Statistics(Integer.parseInt(textField_5.getText().toString()), Integer.parseInt(textField_7.getText().toString()), Integer.parseInt(textField_8.getText().toString()), division, rating), ethnicity);
-						session.beginTransaction();
-						session.save(fighter);
+						  Fighter Tony = new Fighter(textField.getText().toString(), textField_1.getText().toString(),textField_2.getText().toString(),Integer.parseInt(textField_3.getText().toString()),
+								  Integer.parseInt(textField_4.getText().toString()),
+									new Statistics(Integer.parseInt(textField_5.getText().toString()), Integer.parseInt(textField_7.getText().toString()), Integer.parseInt(textField_8.getText().toString()), (Division)comboBox.getSelectedItem(), (DivisionRating)comboBox2.getSelectedItem()),ethnicity);
+						 // Khabib.getStatistics().setListOfOponents(Arrays.asList(Tony, Edson));
+							session.beginTransaction();
+						session.save(Tony);
 						session.getTransaction().commit();
 					  }
 					  finally {
@@ -306,7 +225,7 @@ public class FighterGUI extends JFrame {
 		contentPane.add(btnSubmit);
 		
 		JLabel lblEthnicity = new JLabel("Ethnicity");
-		lblEthnicity.setBounds(41, 288, 46, 14);
+		lblEthnicity.setBounds(41, 288, 80, 14);
 		contentPane.add(lblEthnicity);
 		
 	

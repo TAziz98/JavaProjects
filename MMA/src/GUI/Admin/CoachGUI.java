@@ -38,6 +38,7 @@ public class CoachGUI extends JFrame {
 	private JTextField textField_4;
 	private JTextField textField_5;
 	private Ethnicity ethnicity;
+	private JTextField textField_6;
 
 	/**
 	 * Launch the application.
@@ -88,7 +89,7 @@ public class CoachGUI extends JFrame {
 		
 		String values3[]= {"Afro-American", "Caucasian"};
 		JComboBox comboBox = new JComboBox(values3);
-		comboBox.setBounds(199, 164, 98, 20);
+		comboBox.setBounds(199, 164, 116, 20);
 		comboBox.setBackground(SystemColor.inactiveCaption);
 		contentPane.add(comboBox);
 		
@@ -134,7 +135,6 @@ public class CoachGUI extends JFrame {
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
 				switch(comboBox.getSelectedItem().toString()) {	
 			    
 				case "Afro-American" : 
@@ -148,7 +148,7 @@ public class CoachGUI extends JFrame {
 				 Session session = HibernateUtil.getSessionFactory().openSession();	 
 				  try {
 					
-					 Coach coach = new Coach((textField.getText().toString()), textField_1.getText().toString(), Integer.parseInt(textField_2.getText().toString()), Integer.parseInt(textField_3.getText().toString()), ethnicity,Integer.parseInt(textField_4.getText().toString()),Integer.parseInt(textField_5.getText().toString()));
+					 Coach coach = new Coach(textField_6.getText().toString(),(textField.getText().toString()), textField_1.getText().toString(), Integer.parseInt(textField_2.getText().toString()), Integer.parseInt(textField_3.getText().toString()), ethnicity,Integer.parseInt(textField_4.getText().toString()),Integer.parseInt(textField_5.getText().toString()));
 					session.beginTransaction();
 					session.save(coach);
 					session.getTransaction().commit();
@@ -162,6 +162,20 @@ public class CoachGUI extends JFrame {
 		
 		btnNewButton.setBounds(325, 282, 89, 23);
 		contentPane.add(btnNewButton);
+		
+		JLabel lblNewLabel_1 = new JLabel("Coach");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 19));
+		lblNewLabel_1.setBounds(162, 7, 116, 20);
+		contentPane.add(lblNewLabel_1);
+		
+		JLabel lblNick = new JLabel("Nick");
+		lblNick.setBounds(67, 264, 98, 14);
+		contentPane.add(lblNick);
+		
+		textField_6 = new JTextField();
+		textField_6.setColumns(10);
+		textField_6.setBounds(199, 261, 98, 20);
+		contentPane.add(textField_6);
 	}
 
 }

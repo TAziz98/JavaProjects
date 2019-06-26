@@ -9,6 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import util.HibernateUtil;
+
 
 @Entity
 @Table(name="COACH")
@@ -20,11 +25,14 @@ public class Coach extends Person implements ICoach {
 	@Column(name="experience_as_coach", nullable = false)
 	private int experienceAsCoach;
 	
+	private String coachNick;
 	
-	public Coach(String name, String lastName, Integer coachExperience, int age, Ethnicity ethnicity,Integer salaryAsCoach, Integer experienceAsCoach ) {
+	
+	public Coach(String nick, String name, String lastName, Integer coachExperience, int age, Ethnicity ethnicity,Integer salaryAsCoach, Integer experienceAsCoach ) {
 		// TODO Auto-generated constructor stub
 		super(name, lastName, coachExperience, age, ethnicity);
 		this.setSalaryAsCoach(salaryAsCoach);
+		this.setCoachNick(nick);
 		this.setExperienceAsCoach(experienceAsCoach);
 	}
 	
@@ -32,6 +40,20 @@ public class Coach extends Person implements ICoach {
 		
 	}
 
+	 public static void removeCoach(int id) {
+		  
+		  Session session = HibernateUtil.getSessionFactory().openSession();
+		  try {
+				session.beginTransaction();
+				 Query query=session.createQuery("delete from Coach  where person_id=:id");  
+			      query.setParameter("id",id); 
+				 int deleted = query.executeUpdate();
+			    System.out.println("deleted");
+		  }
+			   finally {
+			   session.close();		
+			}
+	  }
 
 	@Override
 	public void setSalaryAsCoach(Integer salaryAsCoach) {
@@ -75,6 +97,18 @@ public class Coach extends Person implements ICoach {
 		// TODO Auto-generated method stub
 		return this.getAge()-o.getAge();
 	}
+	
+	public String getCoachNick() {
+		return coachNick;
+	}
+
+	public void setCoachNick(String coachNick) {
+		if(coachNick==null)
+			throw new RuntimeException("Given parameter(salary) is null");
+		else
+		this.coachNick = coachNick;
+	}
+
 
 	
 		

@@ -17,6 +17,11 @@ import javax.persistence.*;
 //----------------->Qualified Association 
 import javax.persistence.Table;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import util.HibernateUtil;
+
 
 @Entity
 @Table(name="TEAM")
@@ -30,11 +35,11 @@ public class Team {
 	private String teamsName;
 	
   
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REMOVE,CascadeType.REFRESH})
 	@JoinColumn(name="workout_id")
     private Workout workout;
     
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade =  {CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name="compartment_id")
     private Compartment compartment;
     
@@ -62,10 +67,26 @@ public class Team {
 		else
 		this.workout = workout;
 	}
+
+
+	 public static void removeSpecificTeam(int id) {
+		  
+		  Session session = HibernateUtil.getSessionFactory().openSession();
+		  try {
+				session.beginTransaction();
+				 Query query=session.createQuery("delete from Team  where team_id=:id");  
+			      query.setParameter("id",id); 
+				 int deleted = query.executeUpdate();
+			    System.out.println("deleted");
+		  }
+			   finally {
+			   session.close();		
+			}
+	  }
 	
 	
 	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "team",fetch = FetchType.EAGER)	
+	@OneToMany(cascade ={CascadeType.PERSIST,CascadeType.REFRESH},mappedBy = "team",fetch = FetchType.EAGER)	
 	@MapKey
 	private Map<String,Fighter>  fighters = new HashMap<String,Fighter>();
 	

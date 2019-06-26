@@ -73,13 +73,13 @@ public class IndividualStatistics extends JFrame {
 	 */
 	public IndividualStatistics() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 377, 251);
+		setBounds(100, 100, 377, 240);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.text);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		setResizable(false);
 		
 		JLabel thumb2 = new JLabel();
 		thumb2.setBounds(220, 0, 138, 216);

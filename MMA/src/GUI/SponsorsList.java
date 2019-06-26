@@ -13,11 +13,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import MMA.SponsorshipAssociation;
+import javax.swing.JButton;
+import java.awt.SystemColor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class SponsorsList extends JFrame {
 
 	private JPanel contentPane;
 	 private JTable table_sponsors;
+	 private JButton btnCriteria;
 	/**
 	 * Launch the application.
 	 */
@@ -50,11 +56,13 @@ public class SponsorsList extends JFrame {
 	 */
 	public SponsorsList() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 634, 300);
+		setBounds(100, 100, 621, 314);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setResizable(false);
+		
 		
 		 TableModel model = new DefaultTableModel() {
 		      public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -76,8 +84,27 @@ table_sponsors.setBounds(10, 35, 424, 93);
 table_sponsors.setColumnSelectionAllowed(false);
 table_sponsors.setRowSelectionAllowed(true);
 JScrollPane scrollPane = new JScrollPane(table_sponsors);
-scrollPane.setBounds(21, 44, 563, 160);
+scrollPane.setBounds(10, 11, 563, 229);
 contentPane.add(scrollPane);
+btnCriteria = new JButton("Criteria");
+btnCriteria.addMouseListener(new MouseAdapter() {
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		Criteria c;
+		try {
+			c = new Criteria();
+			c.show();
+			dispose();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+	}
+});
+btnCriteria.setBackground(SystemColor.inactiveCaption);
+btnCriteria.setBounds(528, 251, 77, 23);
+contentPane.add(btnCriteria);
 	}
 
 }

@@ -13,6 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.SystemColor;
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class IndividualEvent extends JFrame {
 
@@ -59,12 +63,13 @@ public class IndividualEvent extends JFrame {
 	 */
 	public IndividualEvent() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 399, 252);
+		setBounds(100, 100, 386, 240);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(47, 79, 79));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setResizable(false);
 		
 		
 		JLabel thumb2 = new JLabel();
@@ -121,7 +126,26 @@ public class IndividualEvent extends JFrame {
 		label_2.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		label_2.setBounds(10, 113, 100, 14);
 		
+		JButton btnCriteria = new JButton("Criteria");
+		btnCriteria.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Criteria c;
+				try {
+					c = new Criteria();
+					c.show();
+					dispose();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		btnCriteria.setBackground(SystemColor.inactiveCaption);
+		btnCriteria.setBounds(281, 177, 80, 23);
+		thumb2.add(btnCriteria);
+		
 	
 	}
-
 }

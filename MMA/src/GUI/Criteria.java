@@ -50,7 +50,7 @@ public class Criteria extends JFrame {
 	
 	public Criteria() throws IOException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 359, 227);
+		setBounds(100, 100, 359, 215);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.BLACK);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -58,7 +58,7 @@ public class Criteria extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.setSize(400,300);
 		contentPane.setLayout(null);
-		
+		setResizable(false);
 		
 		
 		

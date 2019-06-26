@@ -25,6 +25,7 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Font;
 
 public class TeamGUI extends JFrame {
 
@@ -78,7 +79,7 @@ public class TeamGUI extends JFrame {
 		contentPane.add(comboBox);
 		
 		JLabel lblCompartment = new JLabel("Compartment name");
-		lblCompartment.setBounds(94, 154, 97, 14);
+		lblCompartment.setBounds(73, 154, 118, 14);
 		contentPane.add(lblCompartment);
 		
 		textField_1 = new JTextField();
@@ -106,11 +107,13 @@ public class TeamGUI extends JFrame {
 				  }
 				 Session session = HibernateUtil.getSessionFactory().openSession();	 
 				  try {
+					 Workout workout =  new Workout(comboBox.getSelectedItem().toString(), workoutType, "Strikes");
 					  Team team = new Team();
-						team.setCompartment(Compartment.findComparmentByName(textField_1.getText().toString()));
+						team.setCompartment(Compartment.findComparmentById(Integer.parseInt(textField_1.getText().toString())));
 						team.setTeamsName(textField.getText().toString());
-						team.doWorkout(new Workout(comboBox.getSelectedItem().toString(), workoutType, "Strikes"));
+						team.doWorkout(workout);
 					session.beginTransaction();
+					session.save(workout);
 					session.save(team);
 					session.getTransaction().commit();
 				  }
@@ -122,6 +125,11 @@ public class TeamGUI extends JFrame {
 		});
 		btnSubmit.setBounds(300, 202, 76, 23);
 		contentPane.add(btnSubmit);
+		
+		JLabel lblTeam = new JLabel("Team");
+		lblTeam.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblTeam.setBounds(162, 22, 97, 25);
+		contentPane.add(lblTeam);
 		
 		
 		

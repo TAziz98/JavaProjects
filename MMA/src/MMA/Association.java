@@ -39,7 +39,7 @@ public class Association {
 		}
 		
 		
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "association",fetch = FetchType.EAGER)	
+    @OneToMany(cascade ={CascadeType.PERSIST,CascadeType.REFRESH},mappedBy = "association",fetch = FetchType.EAGER)	
 	private Set<Fighter>  fighters = new HashSet<Fighter>();
 	
 	public Set<Fighter> getFighters() {

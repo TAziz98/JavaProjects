@@ -41,7 +41,7 @@ public class HibernateTest {
 				new Statistics(18, 1, 5, Division.LIGHTWEIGHT, DivisionRating.TOP_5), new AfroAmerican("Afro-American", false));
 		Khabib.getStatistics().setListOfOponents(Arrays.asList(Tony, Edson));
         
-		Coach JohnCavnnah = new Coach("John", "Cavannah", 7, 27, new Caucasian("Caucasian", true),1800,7);
+		Coach JohnCavnnah = new Coach("Legend","John", "Cavannah", 7, 27, new Caucasian("Caucasian", true),1800,7);
 		CoachInCareer Gracie = new CoachInCareer("Tiger", "Carlos", "Gracie", 32, 47, new Statistics(21, 0, 3, Division.LIGHTWEIGHT, DivisionRating.TOP_2), 1700, 19, new AfroAmerican("Afro-American", true));
 		Compartment compartment = new Compartment("Samandar", 456,0, EnumSet.of(CompartmentType.BattleArena,CompartmentType.TrainingArena));
 		Compartment Lev = new Compartment("Lev", 234,17, EnumSet.of(CompartmentType.BattleArena));
@@ -56,10 +56,10 @@ public class HibernateTest {
 		teamKhabirov.doWorkout(workout);
 		Khabib.setTeam(teamKhabirov);
 		Promotion promotion = new Promotion("UFC",1971);
-		 Contract contract = new Contract(1, 3000, new Integer(2000), John, promotion);
-		 Contract contract2 = new Contract(3, 500000, new Integer(2000), Khabib, promotion);
-		 Contract contract3 = new Contract(2, 60000, new Integer(2000), Tony, promotion);
-		 Contract contract4 = new Contract(4, 900, new Integer(2000), Edson, promotion);
+		 Contract contract = new Contract("John Hay Contract",1, 3000, new Integer(2000), John, promotion);
+		 Contract contract2 = new Contract("John Khabib Contract",3, 500000, new Integer(2000), Khabib, promotion);
+		 Contract contract3 = new Contract("John Tony Contract", 2, 60000, new Integer(2000), Tony, promotion);
+		 Contract contract4 = new Contract("John Edson Contract", 4, 900, new Integer(2000), Edson, promotion);
 		 
 		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 			Date date = format.parse( "31/12/2020" ); 
@@ -70,32 +70,50 @@ public class HibernateTest {
 		    
 	
 		 
-		 SponsorshipAssociation Reebok = new SponsorshipAssociation("Reebok","h@gmail.com","+48731676861", John);
-		 Reebok.sponsorAFighter(Tony);
+		 SponsorshipAssociation Reebok = new SponsorshipAssociation("Reebok","reebok@gmail.com","+48798678562");
+		 SponsorshipAssociation Reebok2 = new SponsorshipAssociation("Deloitte","deloitte@gmail.com","+48731536378");
+		 SponsorshipAssociation Reebok3 = new SponsorshipAssociation("Samandar","samandarh@gmail.com","+48731676861");
+		 SponsorshipAssociation Reebok4 = new SponsorshipAssociation("Nike","nike@gmail.com","+487538992425");
+		 SponsorshipAssociation Reebok5 = new SponsorshipAssociation("Adidas","adidas@gmail.com","+48731353663");
+	//	 Reebok.sponsorAFighter(Tony);
 		 Reebok.sponsorAFighter(Edson);
+		 Reebok2.sponsorAFighter(Edson);
+		 Reebok3.sponsorAFighter(Edson);
+		 Reebok4.sponsorAFighter(Edson);
+		 Reebok5.sponsorAFighter(Edson);
 		 Reebok.sponsorSpecialFighter(John);
 		 Reebok.sponsorSpecialFighter(Edson);
 		 
 		 Team aka = new Team("AKA");
 		 aka.setCompartment(Lev);
-     	 Tony.setTeam(aka);
+    	 aka.signFighter(Tony);
+     //	 Tony.setTeam(aka);
      	 aka.doWorkout(workout);
-     	// Khabib.setTeam(aka);
+    // 	Tony.setTeam(aka);
      	 
-     	 Association association = new Association("GFC-Association");
-     	 John.setAssociation(association);
-     	 Edson.setAssociation(association);
+//     	 Association association = new Association("GFC-Association");
+//     	 John.setAssociation(association);
+//     	 Edson.setAssociation(association);
 		 
 		session.beginTransaction();
-		
-	//	session.save(statistics);
-		session.save(JohnCavnnah);
+//		session.save(association);
+		session.save(promotion);
+		session.save(Tony);
+		session.save(Edson);
+		session.save(Lev);
+//		session.save(statistics);
+//		session.save(JohnCavnnah);
 		session.save(workout);
 		session.save(contract);
 		session.save(contract2);
 		session.save(contract3);
 		session.save(contract4);
-		session.save(Reebok);
+     	session.save(Reebok);
+     	session.save(Reebok2);
+     	session.save(Reebok3);
+     	session.save(Reebok4);
+     	session.save(Reebok5);
+		session.save(aka);
 		
 		session.getTransaction().commit();
 		System.out.println("row added");

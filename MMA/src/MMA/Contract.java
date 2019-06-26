@@ -15,6 +15,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
+
+import util.HibernateUtil;
+
 @Entity
 @Table(name="CONTRACT")
 public class Contract implements Serializable,Comparable<Contract> {
@@ -23,6 +28,8 @@ public class Contract implements Serializable,Comparable<Contract> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int contract_id;
 	
+	private String name;
+
 	//mandatory
 	@Column(name="number_of_fights", nullable = false)
 	private int numberOfFightsSettledByPromotion;
@@ -35,20 +42,21 @@ public class Contract implements Serializable,Comparable<Contract> {
 	private Integer performanceOfNight;
 	
 	//checked
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name="fighter_id")
 	private Fighter fighter;
 	
 	//should be corrected
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name="promotion_id")
 	private Promotion promotion;
 	
 	@Transient
 	private static int thresholdForSigningContract = 15;
 
-	public Contract(int numberOfFightsSettledByPromotion, int honorariumSettledByPromotion, Integer bonus,
+	public Contract(String name, int numberOfFightsSettledByPromotion, int honorariumSettledByPromotion, Integer bonus,
 			Fighter fighter, Promotion promotion) {
+		this.setName(name);
 		this.thresholdCheck(fighter);
 		this.setNumberOfFightsSettledByPromotion(numberOfFightsSettledByPromotion);
 		this.setHonorariumSettledByPromotion(honorariumSettledByPromotion);
@@ -88,6 +96,23 @@ public class Contract implements Serializable,Comparable<Contract> {
 			this.fighter = null;
 		}
 	}
+	
+	  public static void removeSpecificContract(int id) {
+		  
+		  Session session = HibernateUtil.getSessionFactory().openSession();
+		  try {
+				session.beginTransaction();
+				 Query query=session.createQuery("delete from Contract  where contract_id=:id");  
+			      query.setParameter("id",id); 
+				 int deleted = query.executeUpdate();
+			    System.out.println("deleted");
+		  }
+			   finally {
+			   session.close();		
+			}
+
+	  }
+	 
 	
 	public void excludePromotion(Promotion promotion) {
 		if (promotion == null)
@@ -167,7 +192,17 @@ public class Contract implements Serializable,Comparable<Contract> {
 		// TODO Auto-generated method stub
 		return this.getHonorariumSettledByPromotion()-contract.getHonorariumSettledByPromotion();
 	}
+	
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		if (name == null)
+			throw new IllegalArgumentException("null");
+		else
+		this.name = name;
+	}
 	
 	
 }

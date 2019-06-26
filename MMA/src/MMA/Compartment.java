@@ -91,6 +91,22 @@ public class Compartment implements TrainingArena,BattleArena {
     	 return rentPrice;
      }
     
+    public static void removeCompartment(int id) {
+		  
+		  Session session = HibernateUtil.getSessionFactory().openSession();
+		  try {
+				session.beginTransaction();
+				 Query query=session.createQuery("delete from Compartment where id=:id");  
+			        query.setParameter("id",id); 
+				 int deleted = query.executeUpdate();
+			    System.out.println("deleted");
+		  }
+			   finally {
+			   session.close();		
+			}
+
+	  }
+    
 
 	public boolean isAvailable() {
 		// TODO Auto-generated method stub
@@ -149,14 +165,14 @@ public class Compartment implements TrainingArena,BattleArena {
 			return pricePerDayForEvent;
 		}
 
-		public static Compartment findComparmentByName(String compartmentName) {
+		public static Compartment findComparmentById(int id) {
 			Compartment compartment = null;
 			 Session session = HibernateUtil.getSessionFactory().openSession();
 			 try {
 				session.beginTransaction();
 				
 				String hql = "SELECT c FROM Compartment c " +
-			             "WHERE Name ='" + compartmentName + "'";
+			             "WHERE compartment_id ='" + id + "'";
 				Query query = session.createQuery(hql);
 				compartment = (Compartment)query.uniqueResult();
 				if(compartment==null) 

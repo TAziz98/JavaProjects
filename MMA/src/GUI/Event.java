@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.awt.SystemColor;
+import java.awt.Color;
 
 public class Event extends JFrame {
 
@@ -53,25 +54,35 @@ public class Event extends JFrame {
 	 */
 	public Event() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 378, 246);
+		setBounds(100, 100, 374, 234);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setResizable(false);
 		
 		JLabel thumb2 = new JLabel();
-		thumb2.setBounds(0, 0, 373, 207);
+		thumb2.setForeground(Color.WHITE);
+		thumb2.setFont(new Font("Tahoma", Font.BOLD, 14));
+		thumb2.setBounds(0, 26, 373, 181);
 		contentPane.add(thumb2);
 		thumb2.setIcon(new ImageIcon("C:\\Users\\Admin-Win10\\Desktop\\h5j.jpg"));
+		contentPane.setSize(400,300);
+		
+
+		textField = new JTextField();
+		thumb2.add(textField);
+		textField.setForeground(SystemColor.inactiveCaption);
+		textField.setBounds(211,  85, 96, 24);
+		textField.setColumns(10);
 		
 		JLabel lblPleaseSelect = new JLabel();
-		lblPleaseSelect.setBackground(SystemColor.desktop);
-		lblPleaseSelect.setForeground(SystemColor.text);
+		contentPane.add(lblPleaseSelect);
+		lblPleaseSelect.setBackground(Color.GRAY);
+		lblPleaseSelect.setForeground(Color.BLACK);
 		lblPleaseSelect.setFont(new Font("Chiller", Font.BOLD, 20));
 		lblPleaseSelect.setText("Please, browse events and click \"NEXT\"");
-		lblPleaseSelect.setBounds(59, 79, 285, 16);
-		contentPane.setSize(400,300);
-		thumb2.add(lblPleaseSelect);
+		lblPleaseSelect.setBounds(48, 0, 285, 24);
 		
 		
 		
@@ -81,21 +92,14 @@ public class Event extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				events = new ArrayList<MMA.Event>();
-				events.add(Promotion.getLastEventByDate());
+				events.add(Promotion.getLastEvent());
 				 EventsList eventsList = new EventsList();
 				 eventsList.show_events(events);
 				 eventsList.show();
 				 dispose();
 			}
 		});
-		btnNewButton_1.setBounds(80, 110, 89, 23);
-		
-
-		textField = new JTextField();
-		thumb2.add(textField);
-		textField.setForeground(SystemColor.inactiveCaption);
-		textField.setBounds(220, 110, 96, 20);
-		textField.setColumns(10);
+		btnNewButton_1.setBounds(62, 85, 89, 23);
 		
 		JButton btnNewButton = new JButton("NEXT");
 		thumb2.add(btnNewButton);
@@ -103,13 +107,19 @@ public class Event extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				events = new ArrayList<MMA.Event>();
-				events = Promotion.getEventsByDate(textField.getText().toString());
+				events = Promotion.getEventById(Integer.parseInt(textField.getText().toString()));
 				 EventsList eventsList = new EventsList();
 				 eventsList.show_events(events);
 				 eventsList.show();
 				 dispose();
 			}
 		});
-		btnNewButton.setBounds(280, 160, 64, 22);
+		btnNewButton.setBounds(286, 145, 64, 22);
+		
+		JLabel lblId = new JLabel("Id");
+		lblId.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblId.setForeground(Color.WHITE);
+		lblId.setBounds(249, 68, 46, 14);
+		thumb2.add(lblId);
 	}
 }

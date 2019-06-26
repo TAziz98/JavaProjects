@@ -38,18 +38,17 @@ public class SponsorshipAssociation {
 		
  //------------------->Binary Association
 	
-	public SponsorshipAssociation(String associationName, String contact_email, String phone_numb, Fighter fighter) {
+	public SponsorshipAssociation(String associationName, String contact_email, String phone_numb) {
 		this.setAssociationName(associationName);
 		this.setContact_email(contact_email);
 		this.setPhone_numb(phone_numb);
-		this.sponsorAFighter(fighter);
 	}
 	
 	public SponsorshipAssociation() {
 		
 	}
 	
-	@ManyToMany(cascade = CascadeType.ALL,mappedBy = "sponsors", fetch = FetchType.LAZY)
+	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.REFRESH}, mappedBy = "sponsors", fetch = FetchType.LAZY)
 	private List<Fighter> sponsoredFighters = new ArrayList<>();
 	
 
@@ -65,7 +64,7 @@ public class SponsorshipAssociation {
 					 throw new RuntimeException("Fighter is already sponsored by "+this.associationName); 
 				 else
 				 sponsoredFighters.add(fighter);
-				 if(!fighter.getSponsors().contains(this)) 
+				 if(!fighter.getSponsorsList(fighter.getNickName()).contains(this)) 
 				 fighter.acceptSponsorship(this);
 			 }
 			 }
@@ -88,7 +87,7 @@ public class SponsorshipAssociation {
 		}
 	}
 
-	@ManyToMany(cascade = CascadeType.ALL,mappedBy = "specialMakeSponsors", fetch = FetchType.LAZY)
+	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.REFRESH}, mappedBy = "specialMakeSponsors", fetch = FetchType.LAZY)
 	private List<Fighter> specialSponsoredFighters = new ArrayList<Fighter>();
 	
 	

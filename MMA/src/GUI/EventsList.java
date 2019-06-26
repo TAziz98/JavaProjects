@@ -61,11 +61,12 @@ public class EventsList extends JFrame {
 	 */
 	public EventsList() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 525, 311);
+		setBounds(100, 100, 527, 296);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		setResizable(false);
 		
 		JLabel lblPleaseSelect = new JLabel();
 		lblPleaseSelect.setBackground(SystemColor.desktop);
@@ -120,7 +121,7 @@ table_events.setBounds(10, 35, 424, 93);
 table_events.setColumnSelectionAllowed(false);
 table_events.setRowSelectionAllowed(true);
 JScrollPane scrollPane = new JScrollPane(table_events);
-scrollPane.setBounds(8, 66, 492, 198);
+scrollPane.setBounds(10, 61, 501, 198);
 contentPane.add(scrollPane);
 
 	}

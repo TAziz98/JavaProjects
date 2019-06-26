@@ -77,14 +77,14 @@ public class StatisticsList extends JFrame {
 	
 	public StatisticsList() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 637, 296);
+		setBounds(100, 100, 626, 283);
 		contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.text);
 		contentPane.setForeground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		setResizable(false);
 
 		JLabel thumb2 = new JLabel();
 		thumb2.setBounds(38, 0, 80, 53);
@@ -107,6 +107,21 @@ public class StatisticsList extends JFrame {
 		      }
 		    };
 table_fighters = new JTable(model);
+table_fighters.setCellSelectionEnabled(true);
+table_fighters.setModel(new DefaultTableModel(
+	new Object[][] {
+	},
+	new String[] {
+		"First name", "Last name", "Age", "Division", "Rating", "Wins", "Losts", "Stand Offs"
+	}
+));
+table_fighters.setColumnSelectionAllowed(true);
+table_fighters.setBounds(10, 35, 424, 93);
+table_fighters.setColumnSelectionAllowed(false);
+table_fighters.setRowSelectionAllowed(true);
+JScrollPane scrollPane = new JScrollPane(table_fighters);
+scrollPane.setBounds(7, 64, 608, 185);
+contentPane.add(scrollPane);
 table_fighters.addMouseListener(new MouseAdapter() {
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -129,22 +144,7 @@ table_fighters.addMouseListener(new MouseAdapter() {
 		
 	}
 });
-table_fighters.setCellSelectionEnabled(true);
-table_fighters.setModel(new DefaultTableModel(
-	new Object[][] {
-	},
-	new String[] {
-		"First name", "Last name", "Age", "Division", "Rating", "Wins", "Losts", "Stand Offs"
-	}
-));
-//table_fighters.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-table_fighters.setColumnSelectionAllowed(true);
-table_fighters.setBounds(10, 35, 424, 93);
-table_fighters.setColumnSelectionAllowed(false);
-table_fighters.setRowSelectionAllowed(true);
-JScrollPane scrollPane = new JScrollPane(table_fighters);
-scrollPane.setBounds(7, 64, 608, 185);
-contentPane.add(scrollPane);
+
 
 
 	}

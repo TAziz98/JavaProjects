@@ -21,7 +21,7 @@ public class Event implements Comparable<Event>{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int event_id;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Promotion promotion;
 	
 

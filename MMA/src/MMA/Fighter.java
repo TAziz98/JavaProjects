@@ -71,16 +71,17 @@ public class Fighter extends Person implements Serializable {
 
 	//-------------------->Binary Association
 			
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@ManyToMany(cascade =  {CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.LAZY)
 	@JoinTable(name="FIGHTER_SPONSOR", joinColumns = @JoinColumn(name="fighter_id"), inverseJoinColumns = @JoinColumn(name="sponsorshipAssociation_id"))
 	private Set<SponsorshipAssociation> sponsors = new HashSet<>();
+	
 	
 	
 	public void acceptSponsorship(SponsorshipAssociation sponsor) {
 		if(sponsor == null)
 			throw new RuntimeException("Given parameter(sponsor) is null");
 		else {
-			if(sponsors.contains(sponsor))
+			if(this.getSponsorsList(this.getNickName()).contains(sponsor))
 				throw new RuntimeException("Fighter is already sponsored by"+sponsor.getAssociationName());
 			else {
 				sponsors.add(sponsor);
@@ -93,7 +94,21 @@ public class Fighter extends Person implements Serializable {
 		}
 	}
 	
-	
+  public static void removeFighter(int id) {
+	  
+	  Session session = HibernateUtil.getSessionFactory().openSession();
+	  try {
+			session.beginTransaction();
+			 Query query=session.createQuery("delete from Fighter where person_id=:id");  
+		        query.setParameter("id",id); 
+			 int deleted = query.executeUpdate();
+		    System.out.println("deleted");
+	  }
+		   finally {
+		   session.close();		
+		}
+
+  }
 	
 	public void refuseSponsorship(SponsorshipAssociation sponsor) {
 		if(sponsor == null)
@@ -111,7 +126,7 @@ public class Fighter extends Person implements Serializable {
 	}
 	
 	
-	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.REFRESH},fetch = FetchType.LAZY)
 	@JoinTable(name="SPECIALFIGHTER_SPECIALSPONSOR", joinColumns = @JoinColumn(name="fighter_id"), inverseJoinColumns = @JoinColumn(name="sponsorshipAssociation_id"))
 	private Set<SponsorshipAssociation> specialMakeSponsors = new HashSet<>(); 
 	
@@ -167,6 +182,7 @@ public class Fighter extends Person implements Serializable {
 	}
 	
 	public Set<SponsorshipAssociation> getSponsors() {
+	//	System.out.println(sponsors.size());
 		return new HashSet<>(sponsors);
 	}
 	
@@ -180,7 +196,7 @@ public class Fighter extends Person implements Serializable {
 	
 	//------------------>Qualified Association
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade =  {CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name="team_id")
 	private Team team;
 	
@@ -237,7 +253,7 @@ public class Fighter extends Person implements Serializable {
 	
 	//------------------------->
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade =  {CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name="association_id")
 	private Association association;
 	
@@ -328,14 +344,14 @@ public class Fighter extends Person implements Serializable {
 			return fighterExtent.get(nickName);
 	} */
 
-	public static Fighter ViewRecordByNickName(String nickName) {
+	public static Fighter ViewRecordById(int id) {
 		Fighter fighter = null;
 		 Session session = HibernateUtil.getSessionFactory().openSession();
 		 try {
 			session.beginTransaction();
 			
 			String hql = "SELECT f FROM Fighter f " +
-		             "WHERE nick_name ='" + nickName + "'";
+		             "WHERE person_id ='" + id + "'";
 			Query query = session.createQuery(hql);
 		    fighter = (Fighter)query.uniqueResult();
 			if(fighter==null) 

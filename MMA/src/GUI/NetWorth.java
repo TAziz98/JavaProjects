@@ -12,6 +12,11 @@ import MMA.Fighter;
 import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Font;
+import javax.swing.JButton;
+import java.awt.SystemColor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class NetWorth extends JFrame {
 
@@ -20,6 +25,7 @@ public class NetWorth extends JFrame {
 	private Integer net_worth;
 	private JLabel label;
 	private JLabel label_1;
+	private JButton btnCriteria;
 
 	/**
 	 * Launch the application.
@@ -53,6 +59,7 @@ public class NetWorth extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setResizable(false);
 		
 		JLabel thumb2 = new JLabel();
 		thumb2.setBounds(23, 0, 99, 150);
@@ -72,5 +79,24 @@ public class NetWorth extends JFrame {
 						label_1.setForeground(Color.BLACK);
 						label_1.setFont(new Font("Sitka Subheading", Font.PLAIN, 17));
 						label_1.setBounds(196, 68, 90, 32);
+						
+						btnCriteria = new JButton("Criteria");
+						btnCriteria.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								Criteria c;
+								try {
+									c = new Criteria();
+									c.show();
+									dispose();
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+						});
+						btnCriteria.setBackground(SystemColor.inactiveCaption);
+						btnCriteria.setBounds(270, 165, 75, 23);
+						contentPane.add(btnCriteria);
 	}
 }

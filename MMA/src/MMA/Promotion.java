@@ -52,26 +52,42 @@ public class Promotion implements Serializable{
 		
 	}
 	
-	public static Promotion findPromotionByName(String promotionName) {
+	public static Promotion findPromotionById(int id) {
 		Promotion promotion = null;
 		 Session session = HibernateUtil.getSessionFactory().openSession();
 		 try {
 			session.beginTransaction();
 			
 			String hql = "SELECT p FROM Promotion p " +
-		             "WHERE promotionName ='" + promotionName + "'";
+		             "WHERE promotion_id ='" + id + "'";
 			Query query = session.createQuery(hql);
 		    promotion = (Promotion)query.uniqueResult();
 			if(promotion==null) 
-			throw new RuntimeException("fighter is null");
+			throw new RuntimeException("promotion is null");
 	  }
 		   finally {
 		   session.close();		
-		}
-		 
+		}	 
 		 return promotion;
 	}
 	
+	
+	 public static void removeSpecificPromotion(int id) {
+		  
+		  Session session = HibernateUtil.getSessionFactory().openSession();
+		  try {
+				session.beginTransaction();
+				 Query query=session.createQuery("delete from Promotion  where promotion_id=:id");  
+			      query.setParameter("id",id); 
+				 int deleted = query.executeUpdate();
+			    System.out.println("deleted");
+		  }
+			   finally {
+			   session.close();		
+			}
+	  }
+	
+	 
 	public void setPromotionName(String promotionName) {
 		if (promotionName == null)
 			throw new NullPointerException("Promotions name can't be null");
@@ -86,7 +102,7 @@ public class Promotion implements Serializable{
 	//-------------------->|Association With An Attribute|
 	
 	   // ordered for an association
-	    @OneToMany(mappedBy = "promotion")
+	    @OneToMany(cascade =  CascadeType.PERSIST, mappedBy = "promotion",fetch = FetchType.EAGER)
 		private Set<Contract> listOfContracts = new TreeSet<>();
 	  
 
@@ -113,7 +129,7 @@ public class Promotion implements Serializable{
 		}
   
 		  
-	    @OneToMany(mappedBy = "promotion")
+	    @OneToMany(mappedBy = "promotion",fetch = FetchType.EAGER)
 		private List<Contract> duplicatesVector = new ArrayList<>();
 
 	    
@@ -142,7 +158,7 @@ public class Promotion implements Serializable{
 
 	
 	//-----------------> |Composition Association|
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "promotion")
+	@OneToMany(cascade =  CascadeType.ALL, mappedBy = "promotion")
     private Set<Event> listOfEvents = new HashSet<Event>();
 
     
@@ -172,6 +188,7 @@ public class Promotion implements Serializable{
 		else
 		this.yearOfEstablishment = yearOfEstablishment;
 	}
+	
 	
 	public void organizeEvent(Event event) {
 		System.out.println("****"+eventExtent.size());
@@ -232,13 +249,13 @@ public class Promotion implements Serializable{
 	}
 	
 
-	public static List<Event> getEventsByDate(String dateOfEvent) {
+	public static List<Event> getEventById(int id) {
 	List<Event> events = new ArrayList<Event>();
 	 Session session = HibernateUtil.getSessionFactory().openSession();
 	 try {
 		session.beginTransaction();
 		String hql = "SELECT e FROM Event e " +
-	             "WHERE e.dateOfEvent='" + dateOfEvent + "'";
+	             "WHERE e.event_id='" + id + "'";
 		Query query = session.createQuery(hql);
 		events = query.list();
 	}
@@ -248,7 +265,7 @@ public class Promotion implements Serializable{
 	return events;
 	}
 	
-	public static Event getLastEventByDate() {
+	public static Event getLastEvent() {
 		List<Event> events = new ArrayList<Event>();
 		 Session session = HibernateUtil.getSessionFactory().openSession();
 		 try {

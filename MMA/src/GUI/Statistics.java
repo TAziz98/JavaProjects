@@ -55,7 +55,7 @@ public class Statistics extends JFrame {
 	 */
 	public Statistics() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 361, 229);
+		setBounds(100, 100, 349, 217);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -63,20 +63,21 @@ public class Statistics extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.setSize(400,300);
 		contentPane.setLayout(null);
+		setResizable(false);
 		
 		JLabel lblPleaseSelect = new JLabel();
 		lblPleaseSelect.setBackground(SystemColor.desktop);
 		lblPleaseSelect.setForeground(SystemColor.text);
 		lblPleaseSelect.setFont(new Font("Chiller", Font.BOLD, 20));
 		lblPleaseSelect.setText("Please, browse fighters and click \"NEXT\"");
-		lblPleaseSelect.setBounds(36, 77, 285, 16);
+		lblPleaseSelect.setBounds(32, 0, 285, 22);
 		contentPane.setSize(400,300);
 		contentPane.add(lblPleaseSelect);
 		
-		String values[]={"Flyweight", "Bantaweight", "Featherweight", "Lightweight","Welterweight", "Middleweight", "Lightheavyweight", "Heavyweight"};        
+		Division values[]={Division.BANTAMWEIGHT, Division.FEATHERWEIGHT, Division.FLYWEIGHT, Division.HEAVYWEIGHT, Division.LIGHTHEAVYWEIGHT, Division.LIGHTWEIGHT, Division.MIDDLEWEIGHT, Division.WELTERWEIGHT};        
 		JComboBox comboBox = new JComboBox(values);
 		comboBox.setBackground(SystemColor.inactiveCaption);
-		comboBox.setBounds(61, 104, 110, 20);
+		comboBox.setBounds(45, 96, 126, 20);
 		contentPane.add(comboBox);
 		contentPane.setSize(400,300);
 		contentPane.setLayout(null);
@@ -86,14 +87,14 @@ public class Statistics extends JFrame {
 		textField.setBackground(SystemColor.inactiveCaption);
 	
 		textField.setToolTipText("");
-		textField.setBounds(205, 104, 100, 20);
+		textField.setBounds(205, 96, 100, 20);
 		contentPane.add(textField);
 		textField.setColumns(10);
 		textField.setForeground(Color.GRAY);
 		
 
 		JLabel thumb2 = new JLabel();
-		thumb2.setBounds(0, 0, 343, 188);
+		thumb2.setBounds(0, 24, 343, 164);
 		contentPane.add(thumb2);
 		thumb2.setIcon(new ImageIcon("C:\\Users\\Admin-Win10\\Desktop\\l3.jpg"));
 		
@@ -137,47 +138,47 @@ public class Statistics extends JFrame {
 					public void actionPerformed(ActionEvent e) {
 						fighters = new ArrayList<Fighter>();
 						if(textField.getText().toString().isEmpty()) {
-					//		System.out.println("Gggggg");
-						System.out.println(comboBox.getSelectedItem().toString());
-	    switch(comboBox.getSelectedItem().toString()) {	
-	    
-						case "Flyweight" : 
-						 fighters = Fighter.ViewTopFighters(Division.FLYWEIGHT);	
-						 break;
-							
-						case "Bantaweight" : 
-							fighters =	Fighter.ViewTopFighters(Division.BANTAMWEIGHT);
-							break;
-							
-						case "Featherweight" : 
-							fighters = Fighter.ViewTopFighters(Division.FEATHERWEIGHT);	
-							break;
-							
-						case "Lightweight" : 
-							fighters = Fighter.ViewTopFighters(Division.LIGHTWEIGHT);
-							break;
-						
-							
-						case "Welterweight" : 
-							fighters = Fighter.ViewTopFighters(Division.WELTERWEIGHT);
-							break;
-							
-						case "Middleweight" : 
-							fighters = Fighter.ViewTopFighters(Division.MIDDLEWEIGHT);
-							break;
-							
-						case "Lightheavyweight" : 
-							fighters = Fighter.ViewTopFighters(Division.LIGHTHEAVYWEIGHT);	
-							break;
-							
-						case "Heavyweight" : 
-							fighters = Fighter.ViewTopFighters(Division.HEAVYWEIGHT);
-					        break;
-	    }
+//	    switch(comboBox.getSelectedItem().toString()) {	
+//	    
+//						case "Flyweight" : 
+//						 fighters = Fighter.ViewTopFighters(Division.FLYWEIGHT);	
+//						 break;
+//							
+//						case "Bantaweight" : 
+//							fighters =	Fighter.ViewTopFighters(Division.BANTAMWEIGHT);
+//							break;
+//							
+//						case "Featherweight" : 
+//							fighters = Fighter.ViewTopFighters(Division.FEATHERWEIGHT);	
+//							break;
+//							
+//						case "Lightweight" : 
+//							fighters = Fighter.ViewTopFighters(Division.LIGHTWEIGHT);
+//							break;
+//						
+//							
+//						case "Welterweight" : 
+//							fighters = Fighter.ViewTopFighters(Division.WELTERWEIGHT);
+//							break;
+//							
+//						case "Middleweight" : 
+//							fighters = Fighter.ViewTopFighters(Division.MIDDLEWEIGHT);
+//							break;
+//							
+//						case "Lightheavyweight" : 
+//							fighters = Fighter.ViewTopFighters(Division.LIGHTHEAVYWEIGHT);	
+//							break;
+//							
+//						case "Heavyweight" : 
+//							fighters = Fighter.ViewTopFighters(Division.HEAVYWEIGHT);
+//					        break;
+//	    }
+//						}
+						fighters = Fighter.ViewTopFighters((Division)comboBox.getSelectedItem());
 						}
 						else {
 							System.out.println(textField.getText());
-						fighters.add(Fighter.ViewRecordByNickName(textField.getText().toString()));
+						fighters.add(Fighter.ViewRecordById(Integer.parseInt(textField.getText().toString())));
 						}
 						
 						 statsList = new StatisticsList();
@@ -186,9 +187,14 @@ public class Statistics extends JFrame {
 						 statsList.show();
 						 dispose();
 						 
-						//lblPleaseSelect.setText(Fighter.ViewRecordByNickName(textField.getText()));
 					}
 				});
-				btnNext.setBounds(260, 149, 64, 22);
+				btnNext.setBounds(267, 132, 64, 22);
+				
+				JLabel lblNewLabel = new JLabel("Id");
+				thumb2.add(lblNewLabel);
+				lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
+				lblNewLabel.setForeground(Color.WHITE);
+				lblNewLabel.setBounds(241, 58, 46, 14);
 	}
 }

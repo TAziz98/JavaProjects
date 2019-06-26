@@ -8,8 +8,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import MMA.AfroAmerican;
 import MMA.Compartment;
 import MMA.CompartmentType;
+import MMA.Division;
+import MMA.DivisionRating;
 import MMA.Fighter;
 import MMA.Statistics;
 import util.HibernateUtil;
@@ -77,15 +80,15 @@ public class CompartmentGUI extends JFrame {
 		contentPane.add(textField_2);
 		
 		JLabel lblNewLabel = new JLabel("Compartment name");
-		lblNewLabel.setBounds(73, 86, 102, 14);
+		lblNewLabel.setBounds(34, 86, 141, 14);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblPeriodOfTime = new JLabel("Period of time");
-		lblPeriodOfTime.setBounds(73, 117, 91, 14);
+		lblPeriodOfTime.setBounds(34, 117, 130, 14);
 		contentPane.add(lblPeriodOfTime);
 		
 		JLabel lblPeriodOfHolding = new JLabel("Period of holding down");
-		lblPeriodOfHolding.setBounds(73, 148, 123, 14);
+		lblPeriodOfHolding.setBounds(34, 148, 162, 14);
 		contentPane.add(lblPeriodOfHolding);
 		
 		JCheckBox chckbxNewCheckBox = new JCheckBox("Battle arena");
@@ -93,7 +96,7 @@ public class CompartmentGUI extends JFrame {
 		contentPane.add(chckbxNewCheckBox);
 		
 		JCheckBox chckbxTrainingArena = new JCheckBox("Training arena");
-		chckbxTrainingArena.setBounds(206, 200, 97, 23);
+		chckbxTrainingArena.setBounds(206, 200, 124, 23);
 		contentPane.add(chckbxTrainingArena);
 		
 		JButton btnNewButton = new JButton("Submit");
@@ -109,7 +112,8 @@ public class CompartmentGUI extends JFrame {
 				 Session session = HibernateUtil.getSessionFactory().openSession();	 
 				  try {
 					  Compartment compartment = new Compartment(textField.getText().toString(),Integer.parseInt(textField_1.getText().toString()),Integer.parseInt(textField_2.getText().toString()), compartmentTypes);		
-					session.beginTransaction();
+					
+					  session.beginTransaction();
 					session.save(compartment);
 					session.getTransaction().commit();
 				  }
